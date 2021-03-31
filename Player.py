@@ -3,7 +3,7 @@ from math import sin,cos,sqrt,atan,pi
 class Player:
     def __init__(self,posX: Union[int,float],posY: Union[int,float],speed: Union[int,float],
                  acceleration: Union[int,float],angle: Union[int,float],rotationSpeed: Union[int,float],sizeX: int,
-                 sizeY: int,health: int,damage: int,shotDelayTime: float) -> None:
+                 sizeY: int,maxHealth: int,damage: int,shotDelayTime: float) -> None:
         self.posX = posX
         self.posY = posY
         self.speed = speed
@@ -14,7 +14,8 @@ class Player:
         self.sizeY = sizeY
         self.diagonal: float = sqrt(sizeX**2+sizeY**2)/2
         self.angleShift: float = atan(sizeX/sizeY)
-        self.health = health
+        self.health = maxHealth
+        self.maxHealth = maxHealth
         self.damage = damage
         self.shootDelayTime = shotDelayTime
         self.shootDelay = 0
