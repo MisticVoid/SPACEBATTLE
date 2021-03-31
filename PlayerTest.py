@@ -26,10 +26,13 @@ def main():
     l = 0
     while True:
         screen.blit(background,(0,0))
-        #p.angle = a/10 #uncomment to rotate
+        p.angle = a/30 #uncomment to rotate
         #print(playerView.recolorEdge((a/300)%1),((a/300)%1)) #uncomment to change color
         #rotation require correct of position
-        screen.blit(playerView.draw(), (sizeX//2, sizeY//2))
+        s=playerView.draw()
+        pygame.draw.circle(s, (255, 0, 0), (s.get_rect().width//2, s.get_rect().height//2), 1)
+        screen.blit(s, (sizeX//2-s.get_rect().width//2, sizeY//2-s.get_rect().height//2))
+
         pygame.display.flip()
         times[i]=time.perf_counter_ns()-t
         l+=times[i]
