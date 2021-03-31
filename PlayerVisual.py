@@ -17,15 +17,15 @@ class PlayerVisual:
         self.surface.fill((0,0,0,0))
         draw.polygon(self.surface,self.bodyColor,[(0,0),(0,self.sizeY),(self.sizeX,self.sizeY//2)])
         draw.polygon(self.surface, self.EdgeColor, [(0, 0), (0, self.sizeY), (self.sizeX, self.sizeY // 2)], self.edgeWidth)
-        return self.surface
+        return self.rotate(self.sourcePlayer.angle)
 
     def recolorEdge(self,value: float) -> Color:
-        self.EdgeColor = Color(int(max(255*(1-2*value),255)),int(min(255*value*2,255)),0)
+        self.EdgeColor = Color(int(min(255*(2-2*value),255)),int(min(255*value*2,255)),0)
         return self.EdgeColor
 
-    def rotate(self,angle: float) -> float:
-        self.surface = transform.rotate(self.surface,angle*180/pi)
-        return angle*180/pi
+    def rotate(self,angle: float) -> Surface:
+        return transform.rotate(self.surface,angle*180/pi)
+
 
 
 
