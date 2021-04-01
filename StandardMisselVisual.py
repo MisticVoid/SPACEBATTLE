@@ -5,7 +5,7 @@ class StandardMissileVisual(AbstractMissileVisual):
         super().__init__(size, size)
         self.surface = Surface((size,size),SRCALPHA)
         self.surface.fill((0,0,0,0))
-        draw.circle(self.surface,colorC,(size/2,size/2),size)
+        draw.circle(self.surface,colorC,(size/2,size/2),size/2)
 
     def draw(self) -> Surface:
         return self.surface

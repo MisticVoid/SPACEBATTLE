@@ -1,6 +1,7 @@
 import abc
 from typing import *
 from math import sin,cos
+from pygame import Surface
 
 class AbstractMissile(abc.ABC):
     def __init__(self, posX: int, posY: int, sizeX: int, sizeY: int, damage: int,angle: float,speed: float):
@@ -23,5 +24,7 @@ class AbstractMissile(abc.ABC):
     def collision(self):
         pass
 
+    def draw(self) -> Surface:
+        return self.visual.draw()
 
 
