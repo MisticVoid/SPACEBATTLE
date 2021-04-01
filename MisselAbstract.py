@@ -17,6 +17,9 @@ class AbstractMissile(abc.ABC):
         self.posX += self.speed * deltaTime * cos(self.angle)
         self.posY += self.speed * deltaTime * sin(-self.angle)
 
+    def nextCycle(self,deltaTime: float) -> None:
+        pass
+
     def collision(self):
         pass
 
