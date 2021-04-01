@@ -13,6 +13,8 @@ class MapElement:
             self.mapElement.blit(file,(0,0),special_flags=BLEND_RGBA_MULT)
         else:
             self.mapElement = file
+        self.sizeX = sizeX
+        self.sizeY = sizeY
         self.posX = posX  # left upper corner
         self.posY = posY
 
