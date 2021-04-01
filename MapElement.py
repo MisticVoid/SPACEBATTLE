@@ -13,7 +13,7 @@ class MapElement:
             self.mapElement.blit(file,(0,0),special_flags=BLEND_RGBA_MULT)
         else:
             self.mapElement = file
-        self.posX = posX
+        self.posX = posX  # left upper corner
         self.posY = posY
 
     def draw(self) -> Surface:
