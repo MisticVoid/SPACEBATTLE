@@ -1,10 +1,11 @@
 from TurretAbstract import *
+from standardMissel import *
 from math import sin,cos,sqrt
 
 class StandardTurret(AbstractTurret):
     def __init__(self, posX: int, posY: int, size: int, damage: int, maxHealth: int, coolDown: float,
                  rotationSpeed: float,angle: float,bulletSpeed: int):
-        super().__init__(posX, posY, size, size, damage, maxHealth, coolDown, rotationSpeed,angle)
+        super().__init__(posX, posY, size, size, damage, maxHealth, coolDown, rotationSpeed,angle,StandardMissile)
         print(bulletSpeed)
         self.bulletSpeed = bulletSpeed
         #self.visual =

@@ -4,7 +4,7 @@ from math import pi
 
 class AbstractTurret(abc.ABC):
     def __init__(self, posX: int, posY: int, sizeX: int, sizeY: int, damage: int,maxHealth: int, coolDown: float,
-                 rotationSpeed: float,angle: float):
+                 rotationSpeed: float,angle: float,MissileGenerator):
         self.posX = posX
         self.posY = posY
         self.sizeX = sizeX
@@ -16,6 +16,7 @@ class AbstractTurret(abc.ABC):
         self.currentCoolDown = 0
         self.rotationSpeed = rotationSpeed
         self.angle = angle
+        self.MissileGenerator = MissileGenerator
         self.visual = None
 
     def correctCoolDown(self,deltaTime: float) -> None:
@@ -30,11 +31,13 @@ class AbstractTurret(abc.ABC):
         self.angle += self.rotationSpeed*deltaTime
         self.angle %= 2*pi
 
-    def shoot(self):
-        pass
+    def getDamage(self, damage: float) -> float:
+        self.health = max(self.health - damage, 0)
+        self.visual.recolorEdge(self.health / self.maxHealth)
+        return self.health
 
-    def getDamage(self, damage: float):
-        pass
+    def shoot(self,*args):
+        return self.MissileGenerator(*args)
 
     def canShoot(self):
         pass
