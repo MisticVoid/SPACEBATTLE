@@ -4,6 +4,7 @@ from GameEngine import *
 from MapElement import *
 import Geometry
 
+
 class Level:
     def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine):
         self.screenSizeX = sizeX
