@@ -15,10 +15,20 @@ class Level:
         self.engine = gameEngine
 
         p = playerProperties
-        self.player = Player(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10], p[11], p[12])
+        self.player = Player(*playerProperties)
 
-        #self.mapEl = MapElement(0, 0, sizeX, sizeY, "space1.jpeg")
-        self.mapEl = MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 100), (900, 800), (0, 500)))
+        self.mapEl = []
+
+        # letter replace next lines with map loader
+        el=MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
+        self.addMapEl(el)
+        el = MapElement(1000, 1000, 100, 100, "space1.jpeg")  # if el is a rect it not need cords
+        self.addMapEl(el)
+        el = MapElement(1000, 400, 1000, 200, "space1.jpeg")
+        self.addMapEl(el)
+
+    def addMapEl(self,element):
+        self.mapEl.append(element)
 
     def update(self, deltaTime):
         self.player.nextCycle(deltaTime)
@@ -28,7 +38,6 @@ class Level:
 
         keys = pygame.key.get_pressed()
 
-        #print(self.player.posX, self.player.posY)
 
         if keys[K_UP]:
             self.player.accelerate(deltaTime)
@@ -43,20 +52,29 @@ class Level:
     def display(self):
         s = self.player.draw()
         x, y = int(self.player.posX), int(self.player.posY)
-        self.screen.fill(pygame.Color(255, 0, 0))
+        self.screen.fill(pygame.Color(0, 0, 0))
 
-        self.screen.blit(self.mapEl.draw(), (self.screenSizeX//2-int(self.mapEl.posX)-x, self.screenSizeY//2-int(self.mapEl.posY)-y))
+        for element in self.mapEl:
+            self.blend(self.screen,element,x,y)
 
         pygame.draw.circle(s, (255, 0, 0), (s.get_rect().width // 2, s.get_rect().height // 2), 1)
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
-        print(in_MapElement(self.mapEl, self.player))    #for testing if player in map
         pygame.display.flip()
 
-def in_MapElement(mapElement: MapElement, player: Player):
-    x, y = player.posX, player.posY
-    if not (player.posX > mapElement.posX and player.posX < mapElement.posX+mapElement.sizeX and player.posY > mapElement.posY and player.posY < mapElement.posY + mapElement.sizeY):
-        return False
-    if mapElement.points == None:
-        return True
-    else:
-        return Geometry.inPolygon((player.posX, player.posY), mapElement.points)
+    def blend(self,screen,element,playerPosX,playerPosY,center=False):
+        if center:
+            xl = element.posX -element.sizeX//2 - playerPosX + self.screenSizeX // 2
+            yu = element.posY-element.sizeY//2 - playerPosY + self.screenSizeY // 2
+        else:
+            xl = element.posX - playerPosX+self.screenSizeX//2
+            yu = element.posY - playerPosY + self.screenSizeY // 2
+        xr = xl + element.sizeX
+        yd = yu + element.sizeY
+        if (0<=xl<=self.screenSizeX or 0<=xr<=self.screenSizeX) and (0<=yu<=self.screenSizeY or 0<=yd<=self.screenSizeY):
+            xlr = max(0, xl)
+            xrr = min(xr, self.screenSizeX)
+            yur = max(yu, 0)
+            ydr = min(yd, self.screenSizeY)
+            R = Rect(max(0,-xl), max(0,-yu), xrr - xlr, ydr -yur)
+            screen.blit(element.draw(), (xlr, yur), R)
+
