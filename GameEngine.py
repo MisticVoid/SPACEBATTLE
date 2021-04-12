@@ -22,7 +22,7 @@ class GameEngine:
         self.runG = True
         while self.runG:
 
-            times[i] = min(time.perf_counter_ns() - t,10**8)  # add max value
+            times[i] = min(time.perf_counter_ns() - t,10**8)
             t = time.perf_counter_ns()
             self.level.update(times[i]/10**9)
             self.level.display()
