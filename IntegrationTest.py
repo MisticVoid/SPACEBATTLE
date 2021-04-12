@@ -9,7 +9,7 @@ def main():
     #             rotationSpeed: Union[int, float], sizeX: int, sizeY: int, maxHealth: int, damage: int,
     #             shotDelayTime: float):
 
-    playerProperties = [0, 0, 0, 500, 250, 100, 0, 10, 50, 50, 10, 10, 10]
+    playerProperties = [0, 0, 0, 500, 250, 100, 0, 10, 75, 50, 10, 10, 10]
 
     engine = GameEngine(playerProperties)
 

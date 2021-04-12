@@ -6,9 +6,6 @@ class MapElement:
     def __init__(self,posX: int,posY: int,sizeX: int,sizeY: int,fileName: str, points: Union[Tuple,None] = None):  # if points == None then element is a rectangle, no alpha
         file = image.load(os.path.join("recourses",fileName))
         file = transform.smoothscale(file, (sizeX, sizeY))
-
-        self.points = points #for checking if given point is inside etc.
-
         if points is not None:
             self.mapElement = Surface((sizeX, sizeY), SRCALPHA)
             self.mapElement.fill(Color(0,0,0,0))
