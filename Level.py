@@ -64,10 +64,14 @@ class Level:
         #print(in_MapElement(self.mapEl, self.player))    # for testing if player in mapElement
         pygame.display.flip()
 
-    def blend(self,screen,element,playerPosX,playerPosY):
-        xl = element.posX - playerPosX+self.screenSizeX//2
+    def blend(self,screen,element,playerPosX,playerPosY,center=False): # add centralization
+        if center:
+            xl = element.posX -element.sizeX//2 - playerPosX + self.screenSizeX // 2
+            yu = element.posY-element.sizeY//2 - playerPosY + self.screenSizeY // 2
+        else:
+            xl = element.posX - playerPosX+self.screenSizeX//2
+            yu = element.posY - playerPosY + self.screenSizeY // 2
         xr = xl + element.sizeX
-        yu = element.posY - playerPosY+self.screenSizeY//2
         yd = yu + element.sizeY
         #print(xl, xr, yu, yd)
         if (0<=xl<=self.screenSizeX or 0<=xr<=self.screenSizeX) and (0<=yu<=self.screenSizeY or 0<=yd<=self.screenSizeY):
