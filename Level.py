@@ -38,7 +38,6 @@ class Level:
 
         keys = pygame.key.get_pressed()
 
-        #print(self.player.posX, self.player.posY)
 
         if keys[K_UP]:
             self.player.accelerate(deltaTime)
@@ -57,14 +56,12 @@ class Level:
 
         for element in self.mapEl:
             self.blend(self.screen,element,x,y)
-        #self.screen.blit(self.mapEl.draw(), (self.screenSizeX//2-int(self.mapEl.posX)-x, self.screenSizeY//2-int(self.mapEl.posY)-y))
 
         pygame.draw.circle(s, (255, 0, 0), (s.get_rect().width // 2, s.get_rect().height // 2), 1)
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
-        #print(in_MapElement(self.mapEl, self.player))    # for testing if player in mapElement
         pygame.display.flip()
 
-    def blend(self,screen,element,playerPosX,playerPosY,center=False): # add centralization
+    def blend(self,screen,element,playerPosX,playerPosY,center=False):
         if center:
             xl = element.posX -element.sizeX//2 - playerPosX + self.screenSizeX // 2
             yu = element.posY-element.sizeY//2 - playerPosY + self.screenSizeY // 2
@@ -73,20 +70,11 @@ class Level:
             yu = element.posY - playerPosY + self.screenSizeY // 2
         xr = xl + element.sizeX
         yd = yu + element.sizeY
-        #print(xl, xr, yu, yd)
         if (0<=xl<=self.screenSizeX or 0<=xr<=self.screenSizeX) and (0<=yu<=self.screenSizeY or 0<=yd<=self.screenSizeY):
-            xlr = max(0, xl)  # not sure how pyGame represent coordinates so check if min and max are correct
+            xlr = max(0, xl)
             xrr = min(xr, self.screenSizeX)
             yur = max(yu, 0)
             ydr = min(yd, self.screenSizeY)
             R = Rect(max(0,-xl), max(0,-yu), xrr - xlr, ydr -yur)
             screen.blit(element.draw(), (xlr, yur), R)
 
-# def in_MapElement(mapElement: MapElement, player: Player):
-#     x, y = player.posX, player.posY
-#     if not (player.posX > mapElement.posX and player.posX < mapElement.posX+mapElement.sizeX and player.posY > mapElement.posY and player.posY < mapElement.posY + mapElement.sizeY):
-#         return False
-#     if mapElement.points == None:
-#         return True
-#     else:
-#         return Geometry.inPolygon((player.posX, player.posY), mapElement.points)
