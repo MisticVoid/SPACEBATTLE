@@ -7,6 +7,7 @@ class GameEngine:
     def __init__(self, playerProperties, sizeX = 1920, sizeY=1020):
         pygame.init()
         pygame.display.set_caption("Space Battle")
+        self.run = False
 
         self.level = Level(playerProperties, sizeX, sizeY, self)
 
