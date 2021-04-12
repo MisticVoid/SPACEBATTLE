@@ -15,7 +15,7 @@ class Level:
         self.engine = gameEngine
 
         p = playerProperties
-        self.player = Player(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10], p[11], p[12])
+        self.player = Player(*playerProperties)
 
         self.mapEl = []
 
@@ -24,7 +24,7 @@ class Level:
         self.addMapEl(el)
         el = MapElement(1000, 1000, 100, 100, "space1.jpeg")  # if el is a rect it not need cords
         self.addMapEl(el)
-        el = MapElement(1000, 450, 1000, 100, "space1.jpeg")
+        el = MapElement(1000, 400, 1000, 200, "space1.jpeg")
         self.addMapEl(el)
 
     def addMapEl(self,element):
