@@ -5,7 +5,7 @@ from math import pi,sqrt
 
 
 class PlayerVisual:
-    def __init__(self,sizeX: int,sizeY: int, bodyColor: Color,EdgeColor: Color,sourcePlayer,edgeWidth: int =10):
+    def __init__(self,sizeX: int,sizeY: int, bodyColor: Color,EdgeColor: Color,sourcePlayer,edgeWidth: int =15):
         self.sizeX= sizeX
         self.sizeY = sizeY
         self.surface = Surface((sizeX,sizeY),SRCALPHA)
@@ -13,7 +13,7 @@ class PlayerVisual:
         self.EdgeColor = EdgeColor
         self.sourcePlayer = sourcePlayer
         self.edgeWidth = edgeWidth
-        self.sqrtEdge = sqrt(edgeWidth)
+        self.sqrtEdge = edgeWidth/sqrt(3)
 
     def draw(self) -> Surface:
         self.surface.fill((0,0,0,0))
