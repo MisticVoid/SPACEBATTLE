@@ -14,15 +14,20 @@ class PlayerVisual:
         self.sourcePlayer = sourcePlayer
         self.edgeWidth = edgeWidth
         self.sqrtEdge = edgeWidth/sqrt(3)
+        self.surface.fill((0, 0, 0, 0))
+        draw.polygon(self.surface, self.EdgeColor, [(0, 0), (0, self.sizeY), (self.sizeX, self.sizeY // 2)])
+        draw.polygon(self.surface, self.bodyColor,
+                     [(self.sqrtEdge, self.sqrtEdge), (self.sqrtEdge, self.sizeY - self.sqrtEdge),
+                      (self.sizeX - self.edgeWidth, self.sizeY // 2)])
 
     def draw(self) -> Surface:
-        self.surface.fill((0,0,0,0))
-        draw.polygon(self.surface, self.EdgeColor, [(0, 0), (0, self.sizeY), (self.sizeX, self.sizeY // 2)])
-        draw.polygon(self.surface,self.bodyColor,[(self.sqrtEdge,self.sqrtEdge),(self.sqrtEdge,self.sizeY-self.sqrtEdge),(self.sizeX-self.edgeWidth,self.sizeY//2)])
         return self.__rotate(self.sourcePlayer.angle)
 
     def recolorEdge(self,value: float) -> Color:
         self.EdgeColor = Color(int(min(255*(2-2*value),255)),int(min(255*value*2,255)),0)
+        self.surface.fill((0,0,0,0))
+        draw.polygon(self.surface, self.EdgeColor, [(0, 0), (0, self.sizeY), (self.sizeX, self.sizeY // 2)])
+        draw.polygon(self.surface,self.bodyColor,[(self.sqrtEdge,self.sqrtEdge),(self.sqrtEdge,self.sizeY-self.sqrtEdge),(self.sizeX-self.edgeWidth,self.sizeY//2)])
         return self.EdgeColor
 
     def __rotate(self,angle: float) -> Surface:
