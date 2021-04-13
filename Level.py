@@ -15,7 +15,7 @@ class Level:
         self.engine = gameEngine
 
         p = playerProperties
-        self.player = Player(*playerProperties)
+        self.player = Player(**playerProperties)
 
         self.mapEl = []
 
