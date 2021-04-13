@@ -1,13 +1,15 @@
 from TurretAbstract import *
 from standardMissel import *
 from math import sin,cos,sqrt
+from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient
 
 class StandardTurret(AbstractTurret):
     def __init__(self, posX: int, posY: int, size: int, damage: int, maxHealth: int, coolDown: float,
                  rotationSpeed: float,angle: float,bulletSpeed: int):
-        super().__init__(posX, posY, size, size, damage, maxHealth, coolDown, rotationSpeed,angle,StandardMissile)
-        print(bulletSpeed)
+        super().__init__(posX, posY, size, size, maxHealth, coolDown, rotationSpeed,angle,StandardMissile,
+                         {"size":5,"damage":damage,"speed":bulletSpeed,"colorC":Color(255,0,0)})
         self.bulletSpeed = bulletSpeed
+        self.disLim=10
         #self.visual =
 
     def getCrossPoint(self,posX: float,posY: float,speed: float,angle: float) -> Tuple[float,float]:  # where to aim
@@ -32,6 +34,26 @@ class StandardTurret(AbstractTurret):
         #     y = (posY - Vy1 / Vy2 * self.posY) / (1 - Vy1 / Vy2)
         # return x,y
         return posX,posY
+
+    def canShoot(self,posX:float,posY:float):
+        p2 = self.getPoint()
+        return distPointFromLine(*twoPointToLine((self.posX+self.sizeX // 2, self.posY+self.sizeY // 2),p2),posX,posY) < self.disLim
+
+    def getPoint(self)->tuple[float,float]:
+        p = rotatePoint(10,0,self.angle)
+        return p[0]+self.posX+self.sizeX // 2, p[1]+self.posY+self.sizeY // 2
+
+    def nextCycle(self,deltaTime: float,posX:float,posY:float)->None:
+        self.correctCoolDown(deltaTime)
+        p2 = self.getPoint()
+        center = (self.posX+self.sizeX // 2, self.posY+self.sizeY // 2)
+        o = orient(center,p2,(posX,posY))
+        if o == -1:
+            self.rotateLeft(deltaTime)
+        elif o == 1:
+            self.rotateRight(deltaTime)
+
+
 
 
 

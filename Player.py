@@ -25,7 +25,7 @@ class Player:
         #self.damage = damage
         self.shootDelayTime = shotDelayTime
         self.shootDelay = 0
-        self.misselPlacer = MisselPlacer(StandardMissile,{"size": 5,"damage": damage,"speed": missileSpeed,"colorC": Color(0,255,0)})
+        self.missilePlacer = MisselPlacer(StandardMissile, {"size": 5, "damage": damage, "speed": missileSpeed, "colorC": Color(0, 255, 0)})
         self.visual = PlayerVisual(sizeX,sizeY,Color(0,0,255),Color(0,255,0),self)
 
     def rotateRight(self,deltaTime: float) -> float:
@@ -76,7 +76,7 @@ class Player:
         else:
             self.shootDelay = self.shootDelayTime
             point = self.getPoints()
-            return self.misselPlacer.placeMissile((self.posX, self.posY),point[2],self.sizeX // 2 + 5, self.angle)
+            return self.missilePlacer.placeMissile((self.posX, self.posY), point[2], self.sizeX // 2 + 5, self.angle)
 
 
     def draw(self) -> Surface:
