@@ -1,10 +1,15 @@
 from typing import *
 from math import sin,cos,sqrt,atan,pi
+from MisselPlacer import MisselPlacer
+from standardMissel import StandardMissile
+from MisselAbstract import AbstractMissile
+from Geometry import rotatePoint
 from PlayerVisual import *
 class Player:
     def __init__(self,posX: Union[int,float],posY: Union[int,float],speed: Union[int,float],maxSpeedForward: Union[int,float],
                  maxSpeedBackward: Union[int,float],acceleration: Union[int,float],angle: Union[int,float],
-                 rotationSpeed: Union[int,float],sizeX: int,sizeY: int,maxHealth: int,damage: int,shotDelayTime: float):
+                 rotationSpeed: Union[int,float],sizeX: int,sizeY: int,maxHealth: int,damage: int,shotDelayTime: float,
+                 missileSpeed: int):
         self.posX = posX
         self.posY = posY
         self.speed = speed
@@ -15,13 +20,12 @@ class Player:
         self.rotationSpeed = rotationSpeed
         self.sizeX = sizeX
         self.sizeY = sizeY
-        self.diagonal: float = sqrt(sizeX**2+sizeY**2)/2
-        self.angleShift: float = atan(sizeX/sizeY)
         self.health = maxHealth
         self.maxHealth = maxHealth
-        self.damage = damage
+        #self.damage = damage
         self.shootDelayTime = shotDelayTime
         self.shootDelay = 0
+        self.misselPlacer = MisselPlacer(StandardMissile,{"size": 5,"damage": damage,"speed": missileSpeed,"colorC": Color(0,255,0)})
         self.visual = PlayerVisual(sizeX,sizeY,Color(0,0,255),Color(0,255,0),self)
 
     def rotateRight(self,deltaTime: float) -> float:
@@ -53,26 +57,27 @@ class Player:
         return self.health
 
     def getPoints(self) -> Tuple[Tuple[float,float],Tuple[float,float],Tuple[float,float]]:
-        return (
-            (self.posX+self.diagonal*sin(self.angle+self.angleShift+pi/2),
-                self.posY+self.diagonal*cos(self.angle+self.angleShift+pi/2)),
-            (self.posX + self.diagonal * sin(self.angle - self.angleShift + 3 * pi / 2),
-                self.posY + self.diagonal * cos(self.angle - self.angleShift + 3 * pi / 2)),
-            (self.posX + self.sizeX/2 * sin(self.angle),
-                self.posY + self.sizeX/2 * cos(self.angle))
-            )
+        p=[0,0,0]
+        p[0]=rotatePoint(-self.sizeX//2,-self.sizeY//2,self.angle)
+        p[1]=rotatePoint(-self.sizeX//2,self.sizeY//2,self.angle)
+        p[2]=rotatePoint(self.sizeX//2,0,self.angle)
+        for x in range(3):
+            p[x] = (p[x][0]+self.posX,p[x][1]+self.posY)
+        return p[0],p[1],p[2]
 
     def nextCycle(self,deltaTime) -> Tuple[float,float]:
         self.shootDelay-=deltaTime
         self.shootDelay = max(0,self.shootDelay)
         return self.move(deltaTime)
 
-    def shoot(self) -> bool:
+    def shoot(self) -> Union[AbstractMissile,None]:
         if self.shootDelay>0:
-            return False
+            return None
         else:
-            self.shootDelay=self.shootDelayTime
-            return True
+            self.shootDelay = self.shootDelayTime
+            point = self.getPoints()
+            return self.misselPlacer.placeMissile((self.posX, self.posY),point[2],self.sizeX // 2 + 5, self.angle)
+
 
     def draw(self) -> Surface:
         return self.visual.draw()

@@ -3,6 +3,7 @@ from Player import *
 from GameEngine import *
 from MapElement import *
 import Geometry
+from KeyState import KeyState
 
 
 class Level:
@@ -14,10 +15,12 @@ class Level:
         self.background = pygame.Surface((sizeX, sizeY))
         self.engine = gameEngine
 
-        p = playerProperties
-        self.player = Player(*playerProperties)
+        self.player = Player(**playerProperties)
+
+        self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addMissile(self.player.shoot()))}
 
         self.mapEl = []
+        self.missiles = [] # latter replace with something more efficient
 
         # letter replace next lines with map loader
         el=MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
@@ -36,6 +39,16 @@ class Level:
             if event.type == pygame.QUIT:
                 self.engine.stop()
 
+            if event.type == pygame.KEYDOWN:
+                if event.key in self.keyControl:
+                    self.keyControl[event.key].press()
+                    self.keyControl[event.key].execSingle()
+
+            if event.type == pygame.KEYUP:
+                if event.key in self.keyControl:
+                    self.keyControl[event.key].release()
+
+
         keys = pygame.key.get_pressed()
 
 
@@ -48,6 +61,9 @@ class Level:
         if keys[K_RIGHT]:
             self.player.rotateRight(deltaTime)
 
+        for missile in self.missiles:
+            missile.nextCycle(deltaTime)
+
 
     def display(self):
         s = self.player.draw()
@@ -59,6 +75,9 @@ class Level:
 
         pygame.draw.circle(s, (255, 0, 0), (s.get_rect().width // 2, s.get_rect().height // 2), 1)
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
+
+        for missile in self.missiles:
+            self.blend(self.screen,missile,x,y,True)
         pygame.display.flip()
 
     def blend(self,screen,element,playerPosX,playerPosY,center=False):
@@ -77,4 +96,8 @@ class Level:
             ydr = min(yd, self.screenSizeY)
             R = Rect(max(0,-xl), max(0,-yu), xrr - xlr, ydr -yur)
             screen.blit(element.draw(), (xlr, yur), R)
+
+    def addMissile(self,missile):
+        if missile is not None:
+            self.missiles.append(missile)
 
