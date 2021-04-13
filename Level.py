@@ -4,6 +4,7 @@ from GameEngine import *
 from MapElement import *
 import Geometry
 from KeyState import KeyState
+from StandardTurret import StandardTurret
 
 
 class Level:
@@ -20,7 +21,8 @@ class Level:
         self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addMissile(self.player.shoot()))}
 
         self.mapEl = []
-        self.missiles = [] # latter replace with something more efficient
+        self.missiles = []  # latter replace with something more efficient
+        self.turrets = []
 
         # letter replace next lines with map loader
         el=MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
@@ -29,6 +31,8 @@ class Level:
         self.addMapEl(el)
         el = MapElement(1000, 400, 1000, 200, "space1.jpeg")
         self.addMapEl(el)
+
+        self.turrets.append(StandardTurret(500,500,100,20,100,2,pi/2,0,1000))
 
     def addMapEl(self,element):
         self.mapEl.append(element)
@@ -64,6 +68,9 @@ class Level:
         for missile in self.missiles:
             missile.nextCycle(deltaTime)
 
+        for turret in self.turrets:
+            turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
+            self.addMissile(turret.shoot(self.player.posX,self.player.posY))
 
     def display(self):
         s = self.player.draw()
@@ -73,11 +80,13 @@ class Level:
         for element in self.mapEl:
             self.blend(self.screen,element,x,y)
 
-        pygame.draw.circle(s, (255, 0, 0), (s.get_rect().width // 2, s.get_rect().height // 2), 1)
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
 
         for missile in self.missiles:
             self.blend(self.screen,missile,x,y,True)
+
+        for turret in self.turrets:
+            self.blend(self.screen,turret,x,y)
         pygame.display.flip()
 
     def blend(self,screen,element,playerPosX,playerPosY,center=False):

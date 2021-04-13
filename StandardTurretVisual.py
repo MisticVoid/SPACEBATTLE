@@ -5,17 +5,11 @@ from math import pi
 class StandardTurretVisual(AbstractTurretVisual):
     def __init__(self,size:int,sourceTurret):
         super().__init__(size,size,sourceTurret)
-        self.drawBase(1)
+        self.recolorBase(1)
         self.cannonWidth=size*0.6
         self.cannonhigh =size*0.45
         self.canon = Surface((self.cannonWidth,self.cannonhigh ),SRCALPHA)
         self.drawCanon()
-
-    def drawBase(self,value):
-        edge=Color(int(min(255 * (2 - 2 * value), 255)), int(min(255 * value * 2, 255)), 0)
-        self.surface.fill(edge)
-        draw.rect(self.surface,Color(0,0,0),Rect(self.sizeX/10,self.sizeY/10,self.sizeX*0.8,self.sizeY*0.8))
-        draw.circle(self.surface,Color(0,0,80),(self.sizeX/2,self.sizeX/2),(self.sizeX*0.4))
 
     def drawCanon(self):
         self.canon.fill(Color(0,0,0,0))
@@ -38,6 +32,13 @@ class StandardTurretVisual(AbstractTurretVisual):
         copy=self.surface.copy()
         copy.blit(surf2,posBegin)
         return copy
+
+    def recolorBase(self,value:float):
+        edge = Color(int(min(255 * (2 - 2 * value), 255)), int(min(255 * value * 2, 255)), 0)
+        self.surface.fill(edge)
+        draw.rect(self.surface, Color(0, 0, 0),
+                  Rect(self.sizeX / 10, self.sizeY / 10, self.sizeX * 0.8, self.sizeY * 0.8))
+        draw.circle(self.surface, Color(0, 0, 80), (self.sizeX / 2, self.sizeX / 2), (self.sizeX * 0.4))
 
 
 
