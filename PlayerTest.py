@@ -24,6 +24,7 @@ def main():
     i=0
     t = time.perf_counter_ns()
     l = 0
+    b=0
     while True:
         screen.blit(background,(0,0))
         p.angle = a/30 #uncomment to rotate
