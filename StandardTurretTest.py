@@ -7,7 +7,7 @@ sizeX = 500
 sizeY = 500
 
 def main():
-    turret = StandardTurret(225,225,50,100,100,2,pi,0,1000)
+    turret = StandardTurret(225,225,100,100,100,2,pi/5,0,1000)
     init()
     screen = display.set_mode((sizeX, sizeY))
     a = 0
@@ -19,11 +19,11 @@ def main():
     missels=[]
     while True:
         screen.fill(Color(0,0,0))
-        turret.nextCycle(times[i]/10**9,500,250)
+        turret.nextCycle(times[i]/10**9,0,0)
         #print(turret.angle)
-        missel=turret.shoot(500,250)
-        #s=turret.draw()
-        #screen.blit(s, (turret.posX - s.get_rect().width / 2, turret.posY - s.get_rect().height / 2))
+        missel=turret.shoot(0,0)
+        s=turret.draw()
+        screen.blit(s, (turret.posX, turret.posY ))
         if missel is not None:
             missels.append(missel)
         for missel in missels:

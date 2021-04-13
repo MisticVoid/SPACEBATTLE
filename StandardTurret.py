@@ -2,6 +2,7 @@ from TurretAbstract import *
 from standardMissel import *
 from math import sin,cos,sqrt
 from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient
+from StandardTurretVisual import StandardTurretVisual
 
 class StandardTurret(AbstractTurret):
     def __init__(self, posX: int, posY: int, size: int, damage: int, maxHealth: int, coolDown: float,
@@ -10,7 +11,7 @@ class StandardTurret(AbstractTurret):
                          {"size":5,"damage":damage,"speed":bulletSpeed,"colorC":Color(255,0,0)})
         self.bulletSpeed = bulletSpeed
         self.disLim=10
-        #self.visual =
+        self.visual = StandardTurretVisual(size,self)
 
     def getCrossPoint(self,posX: float,posY: float,speed: float,angle: float) -> Tuple[float,float]:  # where to aim
         # Vx1 = speed * cos(angle)

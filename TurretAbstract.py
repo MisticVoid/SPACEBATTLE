@@ -39,14 +39,13 @@ class AbstractTurret(abc.ABC):
         return self.health
 
     def shoot(self,posX:float,posY:float) -> Union[AbstractMissile, None]:
-        print(self.currentCoolDown,self.canShoot(posX,posY))
         if self.currentCoolDown > 0 or not self.canShoot(posX,posY):
             return None
         else:
             self.currentCoolDown = self.coolDown
             point = self.getPoint()
             return self.missilePlacer.placeMissile((self.posX+self.sizeX // 2, self.posY+self.sizeY // 2), point,
-                                                   self.sizeX // sqrt(2) + 5, self.angle)
+                                                   self.sizeX*0.45, self.angle)
 
     def canShoot(self,posX:float,posY:float)->bool:
         pass
@@ -58,7 +57,7 @@ class AbstractTurret(abc.ABC):
         pass
 
     def draw(self):
-        self.visual.draw()
+        return self.visual.draw()
 
 
 
