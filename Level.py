@@ -5,6 +5,7 @@ from MapElement import *
 import Geometry
 from KeyState import KeyState
 from StandardTurret import StandardTurret
+from RocketTurret import RocketTurret
 
 
 class Level:
@@ -33,6 +34,7 @@ class Level:
         self.addMapEl(el)
 
         self.turrets.append(StandardTurret(500,500,100,20,100,2,pi/2,0,1000))
+        self.turrets.append(RocketTurret(500,700,100,100,100,5,pi/2,0,700,self.player))
 
     def addMapEl(self,element):
         self.mapEl.append(element)
@@ -90,21 +92,23 @@ class Level:
         pygame.display.flip()
 
     def blend(self,screen,element,playerPosX,playerPosY,center=False):
+        surf=element.draw()
         if center:
-            xl = element.posX -element.sizeX//2 - playerPosX + self.screenSizeX // 2
-            yu = element.posY-element.sizeY//2 - playerPosY + self.screenSizeY // 2
+            xl = element.posX -surf.get_rect().width//2 - playerPosX + self.screenSizeX // 2
+            yu = element.posY-surf.get_rect().height//2 - playerPosY + self.screenSizeY // 2
         else:
             xl = element.posX - playerPosX+self.screenSizeX//2
             yu = element.posY - playerPosY + self.screenSizeY // 2
-        xr = xl + element.sizeX
-        yd = yu + element.sizeY
+        xr = xl + surf.get_rect().width
+        yd = yu + surf.get_rect().height
         if (0<=xl<=self.screenSizeX or 0<=xr<=self.screenSizeX) and (0<=yu<=self.screenSizeY or 0<=yd<=self.screenSizeY):
             xlr = max(0, xl)
             xrr = min(xr, self.screenSizeX)
             yur = max(yu, 0)
             ydr = min(yd, self.screenSizeY)
             R = Rect(max(0,-xl), max(0,-yu), xrr - xlr, ydr -yur)
-            screen.blit(element.draw(), (xlr, yur), R)
+            #print(R,element.posX,element.posY)
+            screen.blit(surf, (xlr, yur), R)
 
     def addMissile(self,missile):
         if missile is not None:

@@ -1,6 +1,5 @@
-from pygame import *
+from pygame import Surface
 import abc
-from typing import *
 
 class AbstractMissileVisual(abc.ABC):
     def __init__(self,sizeX: int,sizeY: int):
