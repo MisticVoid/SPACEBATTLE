@@ -1,10 +1,12 @@
 from typing import *
-from math import sin,cos,sqrt,atan,pi
+from math import sin,cos,pi
 from MisselPlacer import MisselPlacer
 from standardMissel import StandardMissile
 from MisselAbstract import AbstractMissile
-from Geometry import rotatePoint
-from PlayerVisual import *
+from Geometry import rotatePoint,orient
+from PlayerVisual import PlayerVisual
+from pygame import Color,Surface
+
 class Player:
     def __init__(self,posX: Union[int,float],posY: Union[int,float],speed: Union[int,float],maxSpeedForward: Union[int,float],
                  maxSpeedBackward: Union[int,float],acceleration: Union[int,float],angle: Union[int,float],
@@ -78,9 +80,16 @@ class Player:
             point = self.getPoints()
             return self.missilePlacer.placeMissile((self.posX, self.posY), point[2], self.sizeX // 2 + 5, self.angle)
 
-
     def draw(self) -> Surface:
         return self.visual.draw()
+
+    def followMouse(self,deltaTime,mosePos):
+        center = (0, 0)
+        o = orient(center,rotatePoint(10,0,self.angle), (mosePos[0], mosePos[1]),0)
+        if o == -1:
+            self.rotateLeft(deltaTime)
+        elif o == 1:
+            self.rotateRight(deltaTime)
 
 
 
