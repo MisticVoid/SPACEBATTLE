@@ -1,4 +1,5 @@
-from AbstractMisselVisual import *
+from AbstractMisselVisual import AbstractMissileVisual
+from pygame import Color,SRCALPHA,Surface,draw
 
 class StandardMissileVisual(AbstractMissileVisual):
     def __init__(self, size: int, colorC: Color):

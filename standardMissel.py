@@ -1,5 +1,6 @@
-from MisselAbstract import *
-from StandardMisselVisual import *
+from MisselAbstract import AbstractMissile
+from StandardMisselVisual import StandardMissileVisual
+from pygame import Color
 
 class StandardMissile(AbstractMissile):
     def __init__(self, posX: int, posY: int, size: int, damage: int, angle: float, speed: float,colorC: Color):

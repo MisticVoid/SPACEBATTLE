@@ -1,13 +1,18 @@
-from standardMissel import *
+from RocketMissile import RocketMissile
 import time
 from math import pi
-from pygame import *
+from pygame import Color,init,display,draw
 
 sizeX = 1920
 sizeY =1080
 
+class MockTarget:
+    def __init__(self,a,b):
+        self.posX=a
+        self.posY=b
+
 def main():
-    missile = StandardMissile(200,200,5,5,3.75*pi/2,2000,Color(0,255,0))
+    missile = RocketMissile(200,500,20,10,10,pi/2,500,pi,Color(255,0,0),MockTarget(800,800))
     init()
     screen = display.set_mode((sizeX, sizeY))
     a = 0
@@ -19,7 +24,7 @@ def main():
         screen.fill(Color(0,0,0))
         missile.nextCycle(times[i]/10**9)
         s = missile.draw()
-
+        draw.circle(screen,Color(255,255,255),(800,800),10)
         screen.blit(s, (missile.posX - s.get_rect().width / 2, missile.posY - s.get_rect().height / 2))
 
         display.flip()
@@ -29,7 +34,7 @@ def main():
         t = time.perf_counter_ns()
         i += 1
         i %= 10
-        print("fps:", sum(times))
+        #print("fps:", sum(times))
 
 
 def sum(T):
@@ -41,5 +46,3 @@ def sum(T):
 
 if __name__ == "__main__":
     main()
-
-

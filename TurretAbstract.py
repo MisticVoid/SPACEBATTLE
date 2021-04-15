@@ -3,7 +3,7 @@ from typing import *
 from math import pi
 from MisselPlacer import MisselPlacer
 from MisselAbstract import AbstractMissile
-from math import sqrt
+from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient
 
 class AbstractTurret(abc.ABC):
     def __init__(self, posX: int, posY: int, sizeX: int, sizeY: int,maxHealth: int, coolDown: float,
@@ -19,6 +19,7 @@ class AbstractTurret(abc.ABC):
         self.rotationSpeed = rotationSpeed
         self.angle = angle
         self.missilePlacer = MisselPlacer(MissileGenerator,kwargs)
+        self.disLim = 10
         self.visual = None
 
     def correctCoolDown(self,deltaTime: float) -> None:
@@ -35,7 +36,7 @@ class AbstractTurret(abc.ABC):
 
     def getDamage(self, damage: float) -> float:
         self.health = max(self.health - damage, 0)
-        self.visual.recolorEdge(self.health / self.maxHealth)
+        self.visual.recolorBase(self.health / self.maxHealth)
         return self.health
 
     def shoot(self,posX:float,posY:float) -> Union[AbstractMissile, None]:
@@ -47,14 +48,24 @@ class AbstractTurret(abc.ABC):
             return self.missilePlacer.placeMissile((self.posX+self.sizeX // 2, self.posY+self.sizeY // 2), point,
                                                    self.sizeX*0.45, self.angle)
 
-    def canShoot(self,posX:float,posY:float)->bool:
-        pass
+    def canShoot(self, posX: float, posY: float):
+        p2 = self.getPoint()
+        return distPointFromLine(*twoPointToLine((self.posX + self.sizeX // 2, self.posY + self.sizeY // 2), p2), posX,
+                                 posY) < self.disLim
 
-    def nextCycle(self,deltaTime: float,posX:float,posY:float)->None:  # position of player required
-        pass
+    def nextCycle(self, deltaTime: float, posX: float, posY: float) -> None:
+        self.correctCoolDown(deltaTime)
+        p2 = self.getPoint()
+        center = (self.posX + self.sizeX // 2, self.posY + self.sizeY // 2)
+        o = orient(center, p2, (posX, posY))
+        if o == -1:
+            self.rotateLeft(deltaTime)
+        elif o == 1:
+            self.rotateRight(deltaTime)
 
-    def getPoint(self)->tuple[float,float]:
-        pass
+    def getPoint(self) -> tuple[float, float]:
+        p = rotatePoint(10, 0, self.angle)
+        return p[0] + self.posX + self.sizeX // 2, p[1] + self.posY + self.sizeY // 2
 
     def draw(self):
         return self.visual.draw()

@@ -1,14 +1,18 @@
-from standardMissel import *
-from StandardTurret import StandardTurret
+from RocketTurret import RocketTurret
 import time
 from math import pi
-from pygame import init,display
+from pygame import init,display,Color,draw
 
-sizeX = 500
-sizeY = 500
+sizeX = 1920
+sizeY = 1080
+
+class MockTarget:
+    def __init__(self,a,b):
+        self.posX=a
+        self.posY=b
 
 def main():
-    turret = StandardTurret(225,225,100,100,100,2,pi/5,0,1000)
+    turret = RocketTurret(225,225,100,100,100,5,pi/5,0,1000,MockTarget(800,800))
     init()
     screen = display.set_mode((sizeX, sizeY))
     a = 0
@@ -20,9 +24,9 @@ def main():
     missels=[]
     while True:
         screen.fill(Color(0,0,0))
-        turret.nextCycle(times[i]/10**9,0,0)
+        turret.nextCycle(times[i]/10**9,800,800)
         #print(turret.angle)
-        missel=turret.shoot(0,0)
+        missel=turret.shoot(800,800)
         s=turret.draw()
         screen.blit(s, (turret.posX, turret.posY ))
         if missel is not None:
@@ -31,7 +35,7 @@ def main():
             missel.nextCycle(times[i]/10**9)
             s=missel.draw()
             screen.blit(s, (missel.posX - s.get_rect().width / 2, missel.posY - s.get_rect().height / 2))
-
+        draw.circle(screen, Color(255, 255, 255), (800, 800), 10)
         display.flip()
         times[i] = time.perf_counter_ns() - t
         l += times[i]
