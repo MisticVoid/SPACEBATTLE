@@ -1,12 +1,11 @@
 import pygame
 from Player import *
-from GameEngine import *
 from MapElement import *
-import Geometry
 from KeyState import KeyState
 from StandardTurret import StandardTurret
 from RocketTurret import RocketTurret
 
+MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
 class Level:
     def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine):
@@ -34,7 +33,7 @@ class Level:
         self.addMapEl(el)
 
         self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
-        self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,350,self.player))
+        self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,600,self.player))
 
     def addMapEl(self,element):
         self.mapEl.append(element)
@@ -57,15 +56,19 @@ class Level:
 
         keys = pygame.key.get_pressed()
 
-
-        if keys[K_UP]:
+        if MOUSE_CONTROL:
+            mosePos=pygame.mouse.get_pos()
+            print(mosePos,self.player.posX,self.player.posY)
+            self.player.followMouse(deltaTime,(mosePos[0]-self.screenSizeX//2, mosePos[1]-self.screenSizeY//2))
+        else:
+            if keys[K_a]:
+                self.player.rotateLeft(deltaTime)
+            if keys[K_d]:
+                self.player.rotateRight(deltaTime)
+        if keys[K_w]:
             self.player.accelerate(deltaTime)
-        if keys[K_DOWN]:
+        if keys[K_s]:
             self.player.reduceSpeed(deltaTime)
-        if keys[K_LEFT]:
-            self.player.rotateLeft(deltaTime)
-        if keys[K_RIGHT]:
-            self.player.rotateRight(deltaTime)
 
         for missile in self.missiles:
             missile.nextCycle(deltaTime)
