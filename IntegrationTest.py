@@ -8,8 +8,8 @@ def main():
     #             maxSpeedBackward: Union[int, float], acceleration: Union[int, float], angle: Union[int, float],
     #             rotationSpeed: Union[int, float], sizeX: int, sizeY: int, maxHealth: int, damage: int,
     #             shotDelayTime: float):
-    playerProperties = {"posX":0,"posY":0,"speed":0,"maxSpeedForward":500,"maxSpeedBackward":100,"acceleration":100,"angle":0,
-    "rotationSpeed":2*pi,"sizeX":75,"sizeY":50,"maxHealth":100,"damage":10,"shotDelayTime":1,"missileSpeed":1000}
+    playerProperties = {"posX":0,"posY":0,"speed":0,"maxSpeedForward":250,"maxSpeedBackward":100,"acceleration":100,"angle":0,
+    "rotationSpeed":2*pi,"sizeX":50,"sizeY":25,"maxHealth":100,"damage":10,"shotDelayTime":1,"missileSpeed":1000}
 
     engine = GameEngine(playerProperties)
 

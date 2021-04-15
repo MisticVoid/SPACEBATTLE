@@ -33,8 +33,8 @@ class Level:
         el = MapElement(1000, 400, 1000, 200, "space1.jpeg")
         self.addMapEl(el)
 
-        self.turrets.append(StandardTurret(500,500,100,20,100,2,pi/2,0,1000))
-        self.turrets.append(RocketTurret(500,700,100,100,100,5,pi/2,0,700,self.player))
+        self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
+        self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,350,self.player))
 
     def addMapEl(self,element):
         self.mapEl.append(element)
