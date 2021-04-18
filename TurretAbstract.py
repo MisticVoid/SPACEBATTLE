@@ -67,6 +67,9 @@ class AbstractTurret(abc.ABC):
         p = rotatePoint(10, 0, self.angle)
         return p[0] + self.posX + self.sizeX // 2, p[1] + self.posY + self.sizeY // 2
 
+    def getPoints(self) -> List[Tuple[float, float]]:
+        return [(self.posX, self.posY), (self.posX, self.posY + self.sizeY), (self.posX + self.sizeX, self.posY + self.sizeY), (self.posX + self.sizeX, self.posY)]
+
     def draw(self):
         return self.visual.draw()
 

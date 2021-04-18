@@ -4,6 +4,8 @@ from MapElement import *
 from KeyState import KeyState
 from StandardTurret import StandardTurret
 from RocketTurret import RocketTurret
+from Obstacle import Obstacle
+from Collision import solveCollisions
 
 MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
@@ -18,10 +20,16 @@ class Level:
 
         self.player = Player(**playerProperties)
 
-        self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addMissile(self.player.shoot()))}
+        self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addPlayerMissile(self.player.shoot()))}
+        #(0, 0), (100, 10), (90, 80), (0, 50)
+        self.obstacles = [Obstacle(400, 400, 100, 100, (50,50,50), points = ((0, 50), (90, 80), (100, 10), (0,0)))]
+        self.obstacles.append(Obstacle(-100, -100, 1200, 100, (50,50,50)))
+        self.obstacles.append(Obstacle(-100, -100, 100, 1200, (50, 50, 50)))
+
 
         self.mapEl = []
-        self.missiles = []  # latter replace with something more efficient
+        self.playerMissiles = set()
+        self.missiles = set()  # latter replace with something more efficient
         self.turrets = []
 
         # letter replace next lines with map loader
@@ -29,7 +37,7 @@ class Level:
         self.addMapEl(el)
         el = MapElement(1000, 1000, 100, 100, "space1.jpeg")  # if el is a rect it not need cords
         self.addMapEl(el)
-        el = MapElement(1000, 400, 1000, 200, "space1.jpeg")
+        el = MapElement(1000, 400, 1000, 2000, "space1.jpeg")
         self.addMapEl(el)
 
         self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
@@ -58,7 +66,7 @@ class Level:
 
         if MOUSE_CONTROL:
             mosePos=pygame.mouse.get_pos()
-            print(mosePos,self.player.posX,self.player.posY)
+            #print(mosePos,self.player.posX,self.player.posY)
             self.player.followMouse(deltaTime,(mosePos[0]-self.screenSizeX//2, mosePos[1]-self.screenSizeY//2))
         else:
             if keys[K_a]:
@@ -70,7 +78,12 @@ class Level:
         if keys[K_s]:
             self.player.reduceSpeed(deltaTime)
 
+        solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, deltaTime)
+
         for missile in self.missiles:
+            missile.nextCycle(deltaTime)
+
+        for missile in self.playerMissiles:
             missile.nextCycle(deltaTime)
 
         for turret in self.turrets:
@@ -90,8 +103,14 @@ class Level:
         for missile in self.missiles:
             self.blend(self.screen,missile,x,y,True)
 
+        for missile in self.playerMissiles:
+            self.blend(self.screen,missile,x,y,True)
+
         for turret in self.turrets:
             self.blend(self.screen,turret,x,y)
+
+        for obstacle in self.obstacles:
+            self.blend(self.screen,obstacle,x,y)
         pygame.display.flip()
 
     def blend(self,screen,element,playerPosX,playerPosY,center=False):
@@ -104,7 +123,8 @@ class Level:
             yu = element.posY - playerPosY + self.screenSizeY // 2
         xr = xl + surf.get_rect().width
         yd = yu + surf.get_rect().height
-        if (0<=xl<=self.screenSizeX or 0<=xr<=self.screenSizeX) and (0<=yu<=self.screenSizeY or 0<=yd<=self.screenSizeY):
+        #if (0 <= xl <= self.screenSizeX or 0 <= xr <= self.screenSizeX) and (0 <= yu <= self.screenSizeY or 0 <= yd <= self.screenSizeY):
+        if (0<=xl<=self.screenSizeX or 0<=xr<=self.screenSizeX or (xl<=0 and xr>=self.screenSizeX)) and (0<=yu<=self.screenSizeY or 0<=yd<=self.screenSizeY or (yu<=0 and yd>=self.screenSizeY)):
             xlr = max(0, xl)
             xrr = min(xr, self.screenSizeX)
             yur = max(yu, 0)
@@ -115,5 +135,9 @@ class Level:
 
     def addMissile(self,missile):
         if missile is not None:
-            self.missiles.append(missile)
+            self.missiles.add(missile)
+
+    def addPlayerMissile(self,missile):
+        if missile is not None:
+            self.playerMissiles.add(missile)
 

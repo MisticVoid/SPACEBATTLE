@@ -30,12 +30,16 @@ class Player:
         self.missilePlacer = MisselPlacer(StandardMissile, {"size": 5, "damage": damage, "speed": missileSpeed, "colorC": Color(0, 255, 0)})
         self.visual = PlayerVisual(sizeX,sizeY,Color(0,0,255),Color(0,255,0),self)
 
+        self.prevAngle = angle
+
     def rotateRight(self,deltaTime: float) -> float:
+        self.prevAngle = self.angle
         self.angle -= self.rotationSpeed*deltaTime
         self.angle %= 2*pi
         return self.angle
 
     def rotateLeft(self,deltaTime: float) -> float:
+        self.prevAngle = self.angle
         self.angle += self.rotationSpeed*deltaTime
         self.angle %= 2*pi
         return self.angle
