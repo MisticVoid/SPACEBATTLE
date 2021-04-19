@@ -31,8 +31,11 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
             player.posX += vec_len * vec[0]
             player.posY += vec_len * vec[1]
 
+            if polygonsCollide(player.getPoints(), obstacle.getPoints() )[0]:
+                Player_Obstacle2(player, obstacle)
+
+            player.speed *= 0.95
             #player.speed = 0
-            player.speed *= 0.8
 
     """ same as player-obstacle collision, but maybe different damage or sth """
     def Player_Turret(player, turret):
@@ -57,18 +60,20 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
             player.posX += vec_len * vec[0]
             player.posY += vec_len * vec[1]
 
+            if polygonsCollide(player.getPoints(), turret.getPoints())[0]:
+                Player_Turret2(player, turret)
+
+            player.speed *= 0.95
             # player.speed = 0
-            player.speed *= 0.8
 
 
-    ### probably to delete
-    """ 
-    def Player_Obstacle(player, obstacle):
+
+    def Player_Obstacle2(player, obstacle):
         if polygonsCollide(player.getPoints(), obstacle.getPoints())[0]:
             player.angle = player.prevAngle
         if polygonsCollide(player.getPoints(), obstacle.getPoints())[0]:
-            print("Collision of player and obstacle")
-            player.hit(0)
+            print("Emergency collision of player and obstacle")
+            #player.hit(0)
 
             if player.speed == 0:
                 return
@@ -77,18 +82,18 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
                 player.posY -= abs(player.speed) / player.speed * 1 * sin(-player.angle)
                 if not polygonsCollide(player.getPoints(), obstacle.getPoints())[0]:
                     break
-            # player.posX -= abs(player.speed) / player.speed * 5 * cos(player.angle)
-            # player.posY -= abs(player.speed) / player.speed * 5 * sin(-player.angle)
+            player.posX -= abs(player.speed) / player.speed * 3 * cos(player.angle)
+            player.posY -= abs(player.speed) / player.speed * 3 * sin(-player.angle)
 
             player.speed = 0
     
-    def Player_Turret(player, turret):
+    def Player_Turret2(player, turret):
         if polygonsCollide(player.getPoints(), turret.getPoints())[0]:
             player.angle = player.prevAngle
 
         if polygonsCollide(player.getPoints(), turret.getPoints())[0]:
-            print("Collision of player and turret")
-            player.hit(0)
+            print("Emergency collision of player and turret")
+            #player.hit(0)
 
             if player.speed == 0:
                 return
@@ -98,12 +103,11 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
                 player.posY -= abs(player.speed) / player.speed * 1 * sin(-player.angle)
                 if not polygonsCollide(player.getPoints(), turret.getPoints())[0]:
                     break
-            #player.posX -= abs(player.speed)/player.speed * 5 * cos(player.angle)
-            #player.posY -= abs(player.speed)/player.speed * 5 * sin(-player.angle)
+            player.posX -= abs(player.speed)/player.speed * 3 * cos(player.angle)
+            player.posY -= abs(player.speed)/player.speed * 3 * sin(-player.angle)
 
             player.speed = 0
-            
-    """
+
 
     def Player_Missile(player, missile):
         if inPolygon((missile.posX, missile.posY), player.getPoints()):

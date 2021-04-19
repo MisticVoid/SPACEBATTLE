@@ -28,7 +28,7 @@ class GameEngine:
             self.level.display()
             i += 1
             i %= 10
-            print("fps:", sum(times))
+            #print("fps:", sum(times))
         else:
             pygame.quit()
 
