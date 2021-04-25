@@ -21,10 +21,10 @@ class Level:
         self.player = Player(**playerProperties)
 
         self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addPlayerMissile(self.player.shoot()))}
-        #(0, 0), (100, 10), (90, 80), (0, 50)
+
         self.obstacles = [Obstacle(400, 400, 100, 100, (50,50,50), points = ((0, 50), (90, 80), (100, 10), (0,0)))]
-        self.obstacles.append(Obstacle(-100, -100, 1200, 100, (50,50,50)))
-        self.obstacles.append(Obstacle(-100, -100, 100, 1200, (50, 50, 50)))
+        self.obstacles.append(Obstacle(-100, -100, 1200, 100, visible = False))
+        self.obstacles.append(Obstacle(-100, -100, 100, 1200, visible = False))
 
 
         self.mapEl = []
@@ -115,6 +115,8 @@ class Level:
 
     def blend(self,screen,element,playerPosX,playerPosY,center=False):
         surf=element.draw()
+        if not surf:
+            return
         if center:
             xl = element.posX -surf.get_rect().width//2 - playerPosX + self.screenSizeX // 2
             yu = element.posY-surf.get_rect().height//2 - playerPosY + self.screenSizeY // 2

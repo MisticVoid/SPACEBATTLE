@@ -27,7 +27,8 @@ def inPolygon(p, polygon, eps = epsilon):           #convex polygons only
 
 
 def polygonsCollide(p1, p2):
-    """ returns True if polygons collide """
+    """ returns True if polygons collide
+        use points"""
     for point in p1:
         if inPolygon(point, p2):
             return True, point, p2
@@ -37,6 +38,16 @@ def polygonsCollide(p1, p2):
             return True, point, p1
 
     return False, None, None
+
+def polygonsCollide2(p1, p2):
+    """ returns True if polygons collide
+        use segments """
+    for i in range (len(p1)):
+        for j in range (len(p2)):
+            if(intersect(p1[i-1],p1[i],p2[j-1],p2[j])):
+                return True
+    return False
+
 
 
 def rotatePoint(pointX,pointY,angle)->tuple[float,float]:
@@ -69,4 +80,8 @@ def dist(p1, p2 ,p3):
         return abs(p3[1]-p2[1])
 
     return distPointFromLine( *twoPointToLine(p1,p2), p3[0], p3[1] )
+
+def intersect(A,B,C,D) -> bool:
+    """check if segment AB intersects with CD"""
+    return orient(A,B,D) != orient(A,B,C) and orient(C,D,A) != orient(C,D,B)
 

@@ -22,7 +22,7 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
 
             """ [a, b] _|_ [b, -a] """
             vec = ( (p1[1]-p2[1]), -(p1[0]-p2[0]) )
-            vec_len = (minDist+5) / sqrt(vec[0]**2 + vec[1]**2)
+            vec_len = (minDist+3) / sqrt(vec[0]**2 + vec[1]**2)
 
             """ different case if obstacle point is inside player """
             if polygon == player.getPoints():
@@ -32,7 +32,10 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
             player.posY += vec_len * vec[1]
 
             if polygonsCollide(player.getPoints(), obstacle.getPoints() )[0]:
+                print("Emergency collision of player and obstacle")
                 Player_Obstacle2(player, obstacle)
+                #player.posX += vec_len * vec[0]
+                #player.posY += vec_len * vec[1]
 
             player.speed *= 0.95
             #player.speed = 0
@@ -52,7 +55,7 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
                     minDist, p1, p2 = d, polygon[i-1], polygon[i]
 
             vec = ( (p1[1]-p2[1]), -(p1[0]-p2[0]) )
-            vec_len = (minDist+5) / sqrt(vec[0]**2 + vec[1]**2)
+            vec_len = (minDist+3) / sqrt(vec[0]**2 + vec[1]**2)
 
             if polygon == player.getPoints():
                 vec_len*=-1
@@ -61,7 +64,10 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
             player.posY += vec_len * vec[1]
 
             if polygonsCollide(player.getPoints(), turret.getPoints())[0]:
+                print("Emergency collision of player and turret")
                 Player_Turret2(player, turret)
+                #player.posX += vec_len * vec[0]
+                #player.posY += vec_len * vec[1]
 
             player.speed *= 0.95
             # player.speed = 0
@@ -72,41 +78,39 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
         if polygonsCollide(player.getPoints(), obstacle.getPoints())[0]:
             player.angle = player.prevAngle
         if polygonsCollide(player.getPoints(), obstacle.getPoints())[0]:
-            print("Emergency collision of player and obstacle")
             #player.hit(0)
 
             if player.speed == 0:
                 return
-            for _ in range(20):
-                player.posX -= abs(player.speed) / player.speed * 1 * cos(player.angle)
-                player.posY -= abs(player.speed) / player.speed * 1 * sin(-player.angle)
+            for _ in range(100):
+                player.posX -= abs(player.speed) / player.speed * 2 * cos(player.angle)
+                player.posY -= abs(player.speed) / player.speed * 2 * sin(-player.angle)
                 if not polygonsCollide(player.getPoints(), obstacle.getPoints())[0]:
                     break
             player.posX -= abs(player.speed) / player.speed * 3 * cos(player.angle)
             player.posY -= abs(player.speed) / player.speed * 3 * sin(-player.angle)
 
-            player.speed = 0
+            #player.speed = 0
     
     def Player_Turret2(player, turret):
         if polygonsCollide(player.getPoints(), turret.getPoints())[0]:
             player.angle = player.prevAngle
 
         if polygonsCollide(player.getPoints(), turret.getPoints())[0]:
-            print("Emergency collision of player and turret")
             #player.hit(0)
 
             if player.speed == 0:
                 return
             # turret.getDamage() ?
-            for _ in range(20):
-                player.posX -= abs(player.speed) / player.speed * 1 * cos(player.angle)
-                player.posY -= abs(player.speed) / player.speed * 1 * sin(-player.angle)
+            for _ in range(100):
+                player.posX -= abs(player.speed) / player.speed * 2 * cos(player.angle)
+                player.posY -= abs(player.speed) / player.speed * 2 * sin(-player.angle)
                 if not polygonsCollide(player.getPoints(), turret.getPoints())[0]:
                     break
             player.posX -= abs(player.speed)/player.speed * 3 * cos(player.angle)
             player.posY -= abs(player.speed)/player.speed * 3 * sin(-player.angle)
 
-            player.speed = 0
+            #player.speed = 0
 
 
     def Player_Missile(player, missile):
