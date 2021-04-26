@@ -88,12 +88,15 @@ class Player:
         return self.visual.draw()
 
     def followMouse(self,deltaTime,mosePos):
+        N = 10
         center = (0, 0)
-        o = orient(center,rotatePoint(10,0,self.angle), (mosePos[0], mosePos[1]),0)
-        if o == -1:
-            self.rotateLeft(deltaTime)
-        elif o == 1:
-            self.rotateRight(deltaTime)
+
+        for _ in range(N):
+            o = orient(center, rotatePoint(10, 0, self.angle), (mosePos[0], mosePos[1]), 0)
+            if o == -1:
+                self.rotateLeft(deltaTime/N)
+            elif o == 1:
+                self.rotateRight(deltaTime/N)
 
 
 
