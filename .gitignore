@@ -129,5 +129,6 @@ dmypy.json
 .pyre/
 
 #ide settings
-.idea/SPACEBATTLE.iml
-.idea/misc.xml
+.idea/
+.SPACEBATTLE.iml
+.misc.xml
