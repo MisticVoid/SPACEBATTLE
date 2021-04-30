@@ -128,12 +128,12 @@ class Level:
         if keys[K_s]:
             self.player.reduceSpeed(deltaTime)
 
-        turrets = self.filterElements(self.turrets)
-        obstacles = self.filterElements(self.obstacles)
-        self.filterMissiles()
+        # turrets = self.filterElements(self.turrets)
+        # obstacles = self.filterElements(self.obstacles)
+        # self.filterMissiles()
 
-        #solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, deltaTime)
-        solveCollisions(self.player, obstacles, turrets, self.playerMissiles, self.missiles, deltaTime)
+        solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, deltaTime)
+        #solveCollisions(self.player, obstacles, turrets, self.playerMissiles, self.missiles, deltaTime)
 
         for missile in self.missiles:
             missile.nextCycle(deltaTime)
@@ -141,13 +141,13 @@ class Level:
         for missile in self.playerMissiles:
             missile.nextCycle(deltaTime)
 
-       # for turret in self.turrets:
-       #     turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
-       #     self.addMissile(turret.shoot(self.player.posX,self.player.posY))
-
-        for turret in turrets:
+        for turret in self.turrets:
             turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
             self.addMissile(turret.shoot(self.player.posX,self.player.posY))
+
+        # for turret in turrets:
+        #     turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
+        #     self.addMissile(turret.shoot(self.player.posX,self.player.posY))
 
     def display(self):
         s = self.player.draw()
