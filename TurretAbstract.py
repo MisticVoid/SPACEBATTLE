@@ -1,13 +1,12 @@
 import abc
 from typing import *
 from math import pi
-from MisselPlacer import MisselPlacer
 from MisselAbstract import AbstractMissile
 from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient
 
 class AbstractTurret(abc.ABC):
     def __init__(self, posX: int, posY: int, sizeX: int, sizeY: int,maxHealth: int, coolDown: float,
-                 rotationSpeed: float,angle: float,MissileGenerator,kwargs):
+                 rotationSpeed: float,angle: float):
         self.posX = posX
         self.posY = posY
         self.sizeX = sizeX
@@ -18,7 +17,6 @@ class AbstractTurret(abc.ABC):
         self.currentCoolDown = 0
         self.rotationSpeed = rotationSpeed
         self.angle = angle
-        self.missilePlacer = MisselPlacer(MissileGenerator,kwargs)
         self.disLim = 10
         self.visual = None
 
@@ -63,6 +61,11 @@ class AbstractTurret(abc.ABC):
             self.rotateLeft(deltaTime)
         elif o == 1:
             self.rotateRight(deltaTime)
+        else:
+            rotatedRight = rotatePoint(0, 10, self.angle)
+            if orient((self.posX,self.posY),(self.posX+rotatedRight[0],self.posY+rotatedRight[1]),(posX,posY))==1:
+                self.rotateRight(deltaTime)
+
 
     def getPoint(self) -> tuple[float, float]:
         p = rotatePoint(10, 0, self.angle)

@@ -1,16 +1,17 @@
 from TurretAbstract import AbstractTurret
 from standardMissel import StandardMissile
-
 from StandardTurretVisual import StandardTurretVisual
 from pygame import Color
+from MisselPlacer import MisselPlacer
 
 class StandardTurret(AbstractTurret):
     def __init__(self, posX: int, posY: int, size: int, damage: int, maxHealth: int, coolDown: float,
                  rotationSpeed: float,angle: float,bulletSpeed: int):
-        super().__init__(posX, posY, size, size, maxHealth, coolDown, rotationSpeed,angle,StandardMissile,
-                         {"size":5,"damage":damage,"speed":bulletSpeed,"colorC":Color(255,0,0)})
+        super().__init__(posX, posY, size, size, maxHealth, coolDown, rotationSpeed,angle)
         self.bulletSpeed = bulletSpeed
         self.visual = StandardTurretVisual(size,self)
+        self.missilePlacer = MisselPlacer(StandardMissile,
+                                          {"size":5,"damage":damage,"speed":bulletSpeed,"colorC":Color(255,0,0)})
 
     # def getCrossPoint(self,posX: float,posY: float,speed: float,angle: float) -> tuple[float,float]:  # where to aim
     #     # Vx1 = speed * cos(angle)
