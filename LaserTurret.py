@@ -1,6 +1,6 @@
 from TurretAbstract import AbstractTurret
 from ClosestPointCross import ClosestPointCross
-from Geometry import twoPointToLine
+from Geometry import twoPointToLine,squarePointDis
 from laserTurretVisual import LaserTurretVisual
 from pygame import draw,Color
 
@@ -43,7 +43,7 @@ class LaserTurret(AbstractTurret):
             self.aimingTime=0
 
     def shoot(self,posX:float,posY:float) -> None:
-        if self.currentCoolDown == 0 and self.canShoot(posX,posY):
+        if self.currentCoolDown == 0 and self.canShoot(posX,posY) and squarePointDis((posX,posY),(self.posX,self.posY))<4000000:
             self.aimingTime = 0
             self.currentCoolDown = self.coolDown
             self.Level.player.hit(self.damage)
@@ -60,7 +60,7 @@ class LaserTurret(AbstractTurret):
         self.correctAimingTime(deltaTime)
 
     def effect(self,screen,screenX,screenY,x,y):
-        if self.isOnLineV:
+        if self.isOnLineV and squarePointDis((x,y),(self.posX,self.posY))<4000000:
             begin=list(self.getPoint())
             begin[0]=begin[0]-x+screenX//2
             begin[1] = begin[1] - y+screenY//2

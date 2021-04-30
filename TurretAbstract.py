@@ -2,7 +2,7 @@ import abc
 from typing import *
 from math import pi
 from MisselAbstract import AbstractMissile
-from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient
+from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient,squarePointDis
 
 class AbstractTurret(abc.ABC):
     def __init__(self, posX: int, posY: int, sizeX: int, sizeY: int,maxHealth: int, coolDown: float,
@@ -38,7 +38,7 @@ class AbstractTurret(abc.ABC):
         return self.health
 
     def shoot(self,posX:float,posY:float) -> Union[AbstractMissile, None]:
-        if self.currentCoolDown > 0 or not self.canShoot(posX,posY):
+        if self.currentCoolDown > 0 or not self.canShoot(posX,posY) or squarePointDis((posX,posY),(self.posX,self.posY))>4000000:
             return None
         else:
             self.currentCoolDown = self.coolDown
