@@ -128,7 +128,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#ide settings
-.idea/
-.SPACEBATTLE.iml
-.misc.xml
