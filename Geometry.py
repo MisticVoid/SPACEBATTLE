@@ -60,7 +60,7 @@ def pointDis(p1,p2):
     return sqrt(squarePointDis(p1,p2))
 
 def crossPoint(A,B,C,p1,p2,po):
-    """return crossing point between line and section or None if point not exist or closest to origin pint if line overlapping"""
+    """return crossing point between line and section or (None,None) if point not exist or closest to origin pint if line overlapping"""
     A2,B2,C2=twoPointToLine(p1,p2)
     y=(A*C2-A2*C)/(A2*B-A*B2)
     x=(B*y+C)/(-A)
@@ -71,10 +71,10 @@ def crossPoint(A,B,C,p1,p2,po):
             else:
                 return p2
         else:
-            return None
+            return None,None
     if inBox(p1,p2,x,y):
         return x,y
-    return None
+    return None,None
 
 
 
