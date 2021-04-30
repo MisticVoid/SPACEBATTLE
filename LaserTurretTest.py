@@ -27,6 +27,9 @@ class MockObstacle:
         return (100,100),(100,200),(200,200),(200,100)
 
 class MockPlayer:
+    def hit(self,*args):
+        print(args)
+
     def __init__(self):
         pass
     posX=450
@@ -42,8 +45,8 @@ class MockLevel:
 
 def main():
     Tx=0
-    Ty=0
-    Turret = LaserTurret(Tx,Ty,20,20,10,3,pi/2,pi,MockMisselGenerator,3,MockLevel,{})
+    Ty=400
+    Turret = LaserTurret(Tx,Ty,20,20,10,3,pi/2,pi,3,MockLevel,20)
     init()
     screen = display.set_mode((sizeX, sizeY))
     times = [0] * 10

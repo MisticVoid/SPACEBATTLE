@@ -2,16 +2,20 @@ from TurretAbstract import AbstractTurret
 from ClosestPointCross import ClosestPointCross
 from Geometry import twoPointToLine
 
+class PlayerInstantDamage:
+    def damage(self,player,damage):
+        player.hit(damage)
+
 class LaserTurret(AbstractTurret):
     def __init__(self, posX: int, posY: int, sizeX: int, sizeY: int, maxHealth: int, coolDown: float,
-                 rotationSpeed: float, angle: float, MissileGenerator,aimTime: float,Level, kwargs):
+                 rotationSpeed: float, angle: float,aimTime: float,Level, damage: int):
         super().__init__(posX, posY, sizeX, sizeY, maxHealth, coolDown, rotationSpeed, angle)
         self.aimTime=aimTime
         self.aimingTime=0
         self.ClosePointSys=ClosestPointCross()
         self.Level=Level
         self.isOnLineV=False
-        self.missilePlacer = MissileGenerator(**kwargs)
+        self.damage=damage
         #self.visual =
 
     def isOnLine(self):
@@ -36,11 +40,11 @@ class LaserTurret(AbstractTurret):
         if self.currentCoolDown == 0 and self.canShoot(posX,posY):
             self.aimingTime = 0
             self.currentCoolDown = self.coolDown
-            self.missilePlacer.damage(self.Level.player)
+            self.Level.player.hit(self.damage)
         return None
 
     def canShoot(self, posX: float, posY: float):
-        #print(self.aimTime,self.aimingTime,self.isOnLineV,self.angle)
+        print(self.aimTime,self.aimingTime,self.isOnLineV,self.angle)
         return self.aimTime<=self.aimingTime and self.isOnLineV
 
     def nextCycle(self, deltaTime: float, posX: float, posY: float) -> None:
