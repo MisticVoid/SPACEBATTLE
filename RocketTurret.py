@@ -14,6 +14,9 @@ class RocketTurret(AbstractTurret):
         self.missilePlacer = MisselPlacer(RocketMissile, {"sizeX":20,"sizeY":10,"damage":damage,"speed":bulletSpeed,"rotationSpeed":pi/2,
                           "colorC":Color(255,0,0),"target":player})
 
+    def effect(self,screen,screenX,screenY,x,y):
+        pass
+
 
 
 

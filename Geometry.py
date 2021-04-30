@@ -61,7 +61,7 @@ def rotatePoint(pointX,pointY,angle)->tuple[float,float]:
 def twoPointToLine(p1,p2):
     """return parameters for line"""
     if p2[0]==p1[0]:
-        a=0
+        return 1,0,-p2[0]
     else:
         a = (p2[1]-p1[1])/(p1[0]-p2[0])
     c = p1[1]+a*p1[0]
@@ -85,8 +85,14 @@ def intersect(A,B,C,D) -> bool:
     """check if segment AB intersects with CD"""
     return orient(A,B,D) != orient(A,B,C) and orient(C,D,A) != orient(C,D,B)
 
-def inBox(p1,p2,x,y):
+def inBox(p1,p2,x,y,lowPrecision=True):
+    eps=1e-8
     """check if point in box with opposite corners p1 and p2"""
+    if lowPrecision:
+        if p1[1]==p2[1]:
+            return (p1[0] <= x <= p2[0] or p1[0] >= x >= p2[0]) and abs(p1[1]-y)<=eps
+        elif p1[0]==p2[0]:
+            return (p1[1]<=y<=p2[1] or p1[1]>=y>=p2[1]) and abs(p1[0] - x) <= eps
     return (p1[0]<=x<=p2[0] or p1[0]>=x>=p2[0]) and (p1[1]<=y<=p2[1] or p1[1]>=y>=p2[1])
 
 def squarePointDis(p1,p2):
@@ -100,6 +106,8 @@ def pointDis(p1,p2):
 def crossPoint(A,B,C,p1,p2,po):
     """return crossing point between line and section or (None,None) if point not exist or closest to origin pint if line overlapping"""
     A2,B2,C2=twoPointToLine(p1,p2)
+    #print("abc2",A2,B2,C2)
+    #print(p1,p2)
     if A2*B==A*B2:
         if A*C2==A2*C:
             if squarePointDis(p1,po)<squarePointDis(p2,po):
@@ -107,13 +115,15 @@ def crossPoint(A,B,C,p1,p2,po):
             else:
                 return p2
         else:
+            #print("-2")
             return None,None
     y = (A * C2 - A2 * C) / (A2 * B - A * B2)
     if A==0:
-        x=(B2+y+C2)/(-A2)
+        x=(B2*y+C2)/(-A2)
     else:
         x = (B * y + C) / (-A)
     if inBox(p1,p2,x,y):
         return x,y
+    #print("*******",p1,p2,x,y)
     return None,None
 

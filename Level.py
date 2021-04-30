@@ -6,6 +6,7 @@ from StandardTurret import StandardTurret
 from RocketTurret import RocketTurret, RocketMissile
 from Obstacle import Obstacle
 from Collision import solveCollisions
+from LaserTurret import LaserTurret
 
 MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
@@ -48,6 +49,7 @@ class Level:
         for i in range(5,50, 5):
             self.turrets.append(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
             self.turrets.append(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
+            self.turrets.append(LaserTurret(i*200+550,800,75,40,4,pi/2,pi,3,self,20))
             self.obstacles.append(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
             self.obstacles.append(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
             self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
@@ -168,6 +170,9 @@ class Level:
 
         for obstacle in self.obstacles:
             self.blend(self.screen,obstacle,x,y)
+
+        for turret in self.turrets:
+            turret.effect(self.screen,self.screenSizeX,self.screenSizeY,x,y)
         pygame.display.flip()
 
     def blend(self,screen,element,playerPosX,playerPosY,center=False):

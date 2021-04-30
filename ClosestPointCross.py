@@ -1,13 +1,14 @@
 import Geometry as Geo
 
 class ClosestPointCross:
-    def __init__(self,x=None,y=None):
+    def __init__(self,owner,x=None,y=None):
         self.closestX=x
         self.closestY=y
         self.A=0
         self.B=0
         self.C=0
         self.O=(0,0)
+        self.owner=owner
 
     def setLine(self,A,B,C,O,ON):
         self.A = A
@@ -22,6 +23,8 @@ class ClosestPointCross:
 
     def analyzeSection(self,p1,p2):
         x,y=Geo.crossPoint(self.A,self.B,self.C,p1,p2,self.O)
+        #print("abc",self.A,self.B,self.C)
+        #print("!!!",x,y)
         if x is not None:
             if (x-self.O[0])*(self.ON[0]-self.O[0])>=0 and (y-self.O[1])*(self.ON[1]-self.O[1])>=0:
                 if self.closestX is None:
@@ -38,7 +41,8 @@ class ClosestPointCross:
 
     def analyzeGroupShapes(self,group,ShapeType="p"):
         for s in group:
-            self.analyzeShape(s.getPoints(),ShapeType)
+            if s!=self.owner:
+                self.analyzeShape(s.getPoints(),ShapeType)
 
     def getPoint(self):
         return self.closestX,self.closestY
