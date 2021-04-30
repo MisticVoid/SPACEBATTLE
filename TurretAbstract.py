@@ -50,8 +50,9 @@ class AbstractTurret(abc.ABC):
 
     def canShoot(self, posX: float, posY: float):
         p2 = self.getPoint()
+        rotatedRight = rotatePoint(0,10,self.angle)
         return distPointFromLine(*twoPointToLine((self.posX + self.sizeX // 2, self.posY + self.sizeY // 2), p2), posX,
-                                 posY) < self.disLim
+                                 posY) < self.disLim and orient((self.posX,self.posY),(self.posX+rotatedRight[0],self.posY+rotatedRight[1]),(posX,posY))==-1
 
     def nextCycle(self, deltaTime: float, posX: float, posY: float) -> None:
         self.correctCoolDown(deltaTime)
