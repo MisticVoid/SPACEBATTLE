@@ -22,6 +22,8 @@ class ClosestPointCross:
 
     def analyzeSection(self,p1,p2):
         x,y=Geo.crossPoint(self.A,self.B,self.C,p1,p2,self.O)
+        #print("abc",self.A,self.B,self.C)
+        #print("!!!",x,y)
         if x is not None:
             if (x-self.O[0])*(self.ON[0]-self.O[0])>=0 and (y-self.O[1])*(self.ON[1]-self.O[1])>=0:
                 if self.closestX is None:

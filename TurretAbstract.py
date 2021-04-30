@@ -54,17 +54,19 @@ class AbstractTurret(abc.ABC):
 
     def nextCycle(self, deltaTime: float, posX: float, posY: float) -> None:
         self.correctCoolDown(deltaTime)
-        p2 = self.getPoint()
-        center = (self.posX + self.sizeX // 2, self.posY + self.sizeY // 2)
-        o = orient(center, p2, (posX, posY))
-        if o == -1:
-            self.rotateLeft(deltaTime)
-        elif o == 1:
-            self.rotateRight(deltaTime)
-        else:
-            rotatedRight = rotatePoint(0, 10, self.angle)
-            if orient((self.posX,self.posY),(self.posX+rotatedRight[0],self.posY+rotatedRight[1]),(posX,posY))==1:
-                self.rotateRight(deltaTime)
+        N=10
+        for _ in range(1,N):
+            p2 = self.getPoint()
+            center = (self.posX + self.sizeX // 2, self.posY + self.sizeY // 2)
+            o = orient(center, p2, (posX, posY))
+            if o == -1:
+                self.rotateLeft(deltaTime/N)
+            elif o == 1:
+                self.rotateRight(deltaTime/N)
+            else:
+                rotatedRight = rotatePoint(0, 10, self.angle)
+                if orient((self.posX,self.posY),(self.posX+rotatedRight[0],self.posY+rotatedRight[1]),(posX,posY))==1:
+                    self.rotateRight(deltaTime/N)
 
 
     def getPoint(self) -> tuple[float, float]:
@@ -76,6 +78,9 @@ class AbstractTurret(abc.ABC):
 
     def draw(self):
         return self.visual.draw()
+
+    def makeEffect(self,screen):
+        pass
 
 
 

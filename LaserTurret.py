@@ -2,6 +2,7 @@ from TurretAbstract import AbstractTurret
 from ClosestPointCross import ClosestPointCross
 from Geometry import twoPointToLine
 from laserTurretVisual import LaserTurretVisual
+from pygame import draw,Color
 
 class PlayerInstantDamage:
     def damage(self,player,damage):
@@ -18,6 +19,7 @@ class LaserTurret(AbstractTurret):
         self.isOnLineV=False
         self.damage=damage
         self.visual = LaserTurretVisual(sizeX,self)
+        self.target=None
 
     def isOnLine(self):
         self.ClosePointSys.reset()
@@ -27,9 +29,12 @@ class LaserTurret(AbstractTurret):
         self.ClosePointSys.analyzeGroupShapes(self.Level.turrets)
         self.ClosePointSys.analyzeGroupShapes(self.Level.obstacles)
         x, y = self.ClosePointSys.getPoint()
+        #print("///",x,y)
         self.ClosePointSys.analyzeShape(self.Level.player.getPoints())
         x2, y2 = self.ClosePointSys.getPoint()
+        #print(x2, y2)
         self.isOnLineV=x!=x2 or y!=y2
+        self.target=(x2,y2)
 
     def correctAimingTime(self,deltaTime):
         if self.isOnLineV:
@@ -53,4 +58,8 @@ class LaserTurret(AbstractTurret):
         #print(self.angle)
         self.isOnLine()
         self.correctAimingTime(deltaTime)
+
+    def effect(self,screen):
+        if self.isOnLineV:
+            draw.line(screen,Color(255,0,0),self.getPoint(),self.target)
 
