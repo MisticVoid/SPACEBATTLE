@@ -9,16 +9,16 @@ class PlayerInstantDamage:
         player.hit(damage)
 
 class LaserTurret(AbstractTurret):
-    def __init__(self, posX: int, posY: int, sizeX: int, sizeY: int, maxHealth: int, coolDown: float,
+    def __init__(self, posX: int, posY: int, size: int, maxHealth: int, coolDown: float,
                  rotationSpeed: float, angle: float,aimTime: float,Level, damage: int):
-        super().__init__(posX, posY, sizeX, sizeY, maxHealth, coolDown, rotationSpeed, angle)
+        super().__init__(posX, posY, size, size, maxHealth, coolDown, rotationSpeed, angle)
         self.aimTime=aimTime
         self.aimingTime=0
-        self.ClosePointSys=ClosestPointCross()
+        self.ClosePointSys=ClosestPointCross(self)
         self.Level=Level
         self.isOnLineV=False
         self.damage=damage
-        self.visual = LaserTurretVisual(sizeX,self)
+        self.visual = LaserTurretVisual(size,self)
         self.target=None
 
     def isOnLine(self):
@@ -59,7 +59,13 @@ class LaserTurret(AbstractTurret):
         self.isOnLine()
         self.correctAimingTime(deltaTime)
 
-    def effect(self,screen):
+    def effect(self,screen,screenX,screenY,x,y):
         if self.isOnLineV:
-            draw.line(screen,Color(255,0,0),self.getPoint(),self.target)
+            begin=list(self.getPoint())
+            begin[0]=begin[0]-x+screenX//2
+            begin[1] = begin[1] - y+screenY//2
+            target=list(self.target)
+            target[0] = target[0] - x+screenX//2
+            target[1] = target[1] - y+screenY//2
+            draw.line(screen,Color(255,0,0),begin,target)
 

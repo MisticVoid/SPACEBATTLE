@@ -79,7 +79,7 @@ class AbstractTurret(abc.ABC):
     def draw(self):
         return self.visual.draw()
 
-    def makeEffect(self,screen):
+    def makeEffect(self,screen,screenX,screenY,x,y):
         pass
 
 

@@ -13,6 +13,9 @@ class StandardTurret(AbstractTurret):
         self.missilePlacer = MisselPlacer(StandardMissile,
                                           {"size":5,"damage":damage,"speed":bulletSpeed,"colorC":Color(255,0,0)})
 
+    def effect(self,screen,screenX,screenY,x,y):
+        pass
+
     # def getCrossPoint(self,posX: float,posY: float,speed: float,angle: float) -> tuple[float,float]:  # where to aim
     #     # Vx1 = speed * cos(angle)
     #     # Vy1 = speed * sin(-angle)
