@@ -44,9 +44,9 @@ class MockLevel:
     player=MockPlayer()
 
 def main():
-    Tx=0
-    Ty=400
-    Turret = LaserTurret(Tx,Ty,20,20,10,3,pi/2,pi,3,MockLevel,20)
+    Tx=50
+    Ty=450
+    Turret = LaserTurret(Tx,Ty,75,75,10,3,pi/2,pi,3,MockLevel,20)
     init()
     screen = display.set_mode((sizeX, sizeY))
     times = [0] * 10
@@ -56,9 +56,10 @@ def main():
         screen.fill(Color(0,0,0))
         Turret.nextCycle(times[i]/10**9,MockLevel.player.posX,MockLevel.player.posY)
         draw.circle(screen,Color(255,255,255),(MockLevel.player.posX,MockLevel.player.posY),10)
-        draw.circle(screen, Color(255, 0, 0), (Tx, Ty), 10)
-        draw.circle(screen, Color(0, 255, 0), Turret.getPoint(), 3)
-        #screen.blit(s, (missile.posX - s.get_rect().width / 2, missile.posY - s.get_rect().height / 2))
+        #draw.circle(screen, Color(255, 0, 0), (Tx, Ty), 10)
+        #draw.circle(screen, Color(0, 255, 0), Turret.getPoint(), 3)
+        s=Turret.draw()
+        screen.blit(s, (Turret.posX, Turret.posY))
         Turret.shoot(MockLevel.player.posX,MockLevel.player.posY)
         display.flip()
         times[i] = time.perf_counter_ns() - t

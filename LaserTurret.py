@@ -1,6 +1,7 @@
 from TurretAbstract import AbstractTurret
 from ClosestPointCross import ClosestPointCross
 from Geometry import twoPointToLine
+from laserTurretVisual import LaserTurretVisual
 
 class PlayerInstantDamage:
     def damage(self,player,damage):
@@ -16,7 +17,7 @@ class LaserTurret(AbstractTurret):
         self.Level=Level
         self.isOnLineV=False
         self.damage=damage
-        #self.visual =
+        self.visual = LaserTurretVisual(sizeX,self)
 
     def isOnLine(self):
         self.ClosePointSys.reset()
@@ -44,7 +45,7 @@ class LaserTurret(AbstractTurret):
         return None
 
     def canShoot(self, posX: float, posY: float):
-        print(self.aimTime,self.aimingTime,self.isOnLineV,self.angle)
+        #print(self.aimTime,self.aimingTime,self.isOnLineV,self.angle)
         return self.aimTime<=self.aimingTime and self.isOnLineV
 
     def nextCycle(self, deltaTime: float, posX: float, posY: float) -> None:
