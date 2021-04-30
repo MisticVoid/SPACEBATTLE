@@ -3,7 +3,7 @@ from Player import *
 from MapElement import *
 from KeyState import KeyState
 from StandardTurret import StandardTurret
-from RocketTurret import RocketTurret
+from RocketTurret import RocketTurret, RocketMissile
 from Obstacle import Obstacle
 from Collision import solveCollisions
 
@@ -34,7 +34,7 @@ class Level:
         self.turrets = []
 
         # letter replace next lines with map loader
-        el=MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
+        el = MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
         self.addMapEl(el)
         el = MapElement(1000, 1000, 100, 100, "space1.jpeg")  # if el is a rect it not need cords
         self.addMapEl(el)
@@ -50,7 +50,7 @@ class Level:
             self.turrets.append(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
             self.obstacles.append(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
             self.obstacles.append(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
-            self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500))) )
+            self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
 
         self.obstacles.append(Obstacle(8900, -100, 100, 1200, visible = False))
 
@@ -67,6 +67,29 @@ class Level:
                     0 <= yu <= self.screenSizeY or 0 <= yd <= self.screenSizeY or (yu <= 0 and yd >= self.screenSizeY)):
                 filtered.append(element)
         return filtered
+
+
+
+    def filterMissiles(self):
+        playerPosX, playerPosY = int(self.player.posX), int(self.player.posY)
+        toDel = set()
+        for element in self.missiles:
+            if not isinstance(element, RocketMissile):
+                x = element.posX - playerPosX + self.screenSizeX // 2
+                y = element.posY - playerPosY + self.screenSizeY // 2
+                if not((0 <= x <= self.screenSizeX) and (0 <= y <= self.screenSizeY)):
+                    toDel.add(element)
+
+        self.missiles -= toDel
+        toDel = set()
+        for element in self.playerMissiles:
+            x = element.posX - playerPosX + self.screenSizeX // 2
+            y = element.posY - playerPosY + self.screenSizeY // 2
+            if not ((0 <= x <= self.screenSizeX) and (0 <= y <= self.screenSizeY)):
+                toDel.add(element)
+        self.playerMissiles -= toDel
+
+
 
     def addMapEl(self,element):
         self.mapEl.append(element)
@@ -105,6 +128,7 @@ class Level:
 
         turrets = self.filterElements(self.turrets)
         obstacles = self.filterElements(self.obstacles)
+        self.filterMissiles()
 
         #solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, deltaTime)
         solveCollisions(self.player, obstacles, turrets, self.playerMissiles, self.missiles, deltaTime)
