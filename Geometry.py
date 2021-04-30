@@ -46,7 +46,3 @@ def distPointFromLine(A,B,C,x,y):
     """return distans of a point from line with parameters A,B,C"""
     return abs(A*x+B*y+C)/sqrt(A**2+B**2)
 
-
-
-
-
