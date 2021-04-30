@@ -46,3 +46,36 @@ def distPointFromLine(A,B,C,x,y):
     """return distans of a point from line with parameters A,B,C"""
     return abs(A*x+B*y+C)/sqrt(A**2+B**2)
 
+
+def inBox(p1,p2,x,y):
+    """check if point in box with opposite corners p1 and p2"""
+    return (p1[0]<=x<=p2[0] or p1[0]>=x>=p2[0]) and (p1[1]<=y<=p2[1] or p1[1]>=y>=p2[1])
+
+def squarePointDis(p1,p2):
+    """return square of distance between points"""
+    return (p1[0]-p2[0])**2+(p1[1]-p2[1])
+
+def pointDis(p1,p2):
+    """return distance between points"""
+    return sqrt(squarePointDis(p1,p2))
+
+def crossPoint(A,B,C,p1,p2,po):
+    """return crossing point between line and section or None if point not exist or closest to origin pint if line overlapping"""
+    A2,B2,C2=twoPointToLine(p1,p2)
+    y=(A*C2-A2*C)/(A2*B-A*B2)
+    x=(B*y+C)/(-A)
+    if A2*B==A*B2:
+        if A*C2==A2*C:
+            if squarePointDis(p1,po)<squarePointDis(p2,po):
+                return p1
+            else:
+                return p2
+        else:
+            return None
+    if inBox(p1,p2,x,y):
+        return x,y
+    return None
+
+
+
+
