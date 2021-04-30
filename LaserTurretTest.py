@@ -45,7 +45,7 @@ class MockLevel:
 
 def main():
     Tx=50
-    Ty=450
+    Ty=400
     Turret = LaserTurret(Tx,Ty,75,75,10,3,pi/2,pi,3,MockLevel,20)
     init()
     screen = display.set_mode((sizeX, sizeY))

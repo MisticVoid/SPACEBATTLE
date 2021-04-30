@@ -61,6 +61,11 @@ class AbstractTurret(abc.ABC):
             self.rotateLeft(deltaTime)
         elif o == 1:
             self.rotateRight(deltaTime)
+        else:
+            rotatedRight = rotatePoint(0, 10, self.angle)
+            if orient((self.posX,self.posY),(self.posX+rotatedRight[0],self.posY+rotatedRight[1]),(posX,posY))==1:
+                self.rotateRight(deltaTime)
+
 
     def getPoint(self) -> tuple[float, float]:
         p = rotatePoint(10, 0, self.angle)
