@@ -24,7 +24,10 @@ class ClosestPointCross:
         x,y=Geo.crossPoint(self.A,self.B,self.C,p1,p2,self.O)
         if x is not None:
             if (x-self.O[0])*(self.ON[0]-self.O[0])>=0 and (y-self.O[1])*(self.ON[1]-self.O[1])>=0:
-                if abs(x-self.O[0])<abs(self.closestX-self.O[0]) or abs(y-self.O[1])<abs(self.closestY-self.O[1]):
+                if self.closestX is None:
+                    self.closestX = x
+                    self.closestY = y
+                elif abs(x-self.O[0])<abs(self.closestX-self.O[0]) or abs(y-self.O[1])<abs(self.closestY-self.O[1]):
                     self.closestX = x
                     self.closestY = y
 
