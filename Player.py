@@ -30,12 +30,16 @@ class Player:
         self.missilePlacer = MisselPlacer(StandardMissile, {"size": 5, "damage": damage, "speed": missileSpeed, "colorC": Color(0, 255, 0)})
         self.visual = PlayerVisual(sizeX,sizeY,Color(0,0,255),Color(0,255,0),self)
 
+        self.prevAngle = angle
+
     def rotateRight(self,deltaTime: float) -> float:
+        self.prevAngle = self.angle
         self.angle -= self.rotationSpeed*deltaTime
         self.angle %= 2*pi
         return self.angle
 
     def rotateLeft(self,deltaTime: float) -> float:
+        self.prevAngle = self.angle
         self.angle += self.rotationSpeed*deltaTime
         self.angle %= 2*pi
         return self.angle
@@ -84,12 +88,15 @@ class Player:
         return self.visual.draw()
 
     def followMouse(self,deltaTime,mosePos):
+        N = 10
         center = (0, 0)
-        o = orient(center,rotatePoint(10,0,self.angle), (mosePos[0], mosePos[1]),0)
-        if o == -1:
-            self.rotateLeft(deltaTime)
-        elif o == 1:
-            self.rotateRight(deltaTime)
+
+        for _ in range(N):
+            o = orient(center, rotatePoint(10, 0, self.angle), (mosePos[0], mosePos[1]), 0)
+            if o == -1:
+                self.rotateLeft(deltaTime/N)
+            elif o == 1:
+                self.rotateRight(deltaTime/N)
 
 
 
