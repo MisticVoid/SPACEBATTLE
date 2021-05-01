@@ -1,4 +1,3 @@
-from Level import Level
 from StandardTurret import StandardTurret
 from RocketTurret import RocketTurret
 from LaserTurret import LaserTurret
