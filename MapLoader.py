@@ -30,13 +30,14 @@ class MapLoader:
                 self.level.mapEl.add(self.loadElement(f))
             else:
                 print("unknown marker")
+                data=False
 
         f.close()
 
     def loadTurret(self,f):
         line = f.readline()[:-1]
         V=[0]*9
-        for i in range(5):
+        for i in range(6):
             V[i] = int(f.readline()[:-1])
 
         for i in range(6,8):
@@ -54,7 +55,7 @@ class MapLoader:
         elif line == "L":
             return LaserTurret(*tuple(V),self.level)
         else:
-            print("unknown marker")  # throw error or something
+            print("unknown marker in Turret")  # throw error or something
 
     def loadObstacle(self,f):
         C=[0]*4
@@ -70,7 +71,7 @@ class MapLoader:
             x=int(f.readline()[:-1])
             y = int(f.readline()[:-1])
             P[i]=(x,y)
-        return Obstacle(*tuple(C),points=tuple(P),visible=vis)
+        return Obstacle(*tuple(C),points=tuple(P),visible=vis,color=(50,50,50))
 
     def loadElement(self,f):
         C = [0] * 4
