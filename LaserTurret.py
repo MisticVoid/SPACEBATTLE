@@ -9,13 +9,13 @@ class PlayerInstantDamage:
         player.hit(damage)
 
 class LaserTurret(AbstractTurret):
-    def __init__(self, posX: int, posY: int, size: int, maxHealth: int, coolDown: float,
-                 rotationSpeed: float, angle: float,aimTime: float,Level, damage: int):
+    def __init__(self, posX: int, posY: int, size: int,damage: int, maxHealth: int, coolDown: float,
+                 rotationSpeed: float, angle: float,aimTime: float,level):
         super().__init__(posX, posY, size, size, maxHealth, coolDown, rotationSpeed, angle)
         self.aimTime=aimTime
         self.aimingTime=0
         self.ClosePointSys=ClosestPointCross(self)
-        self.Level=Level
+        self.Level=level
         self.isOnLineV=False
         self.damage=damage
         self.visual = LaserTurretVisual(size,self)

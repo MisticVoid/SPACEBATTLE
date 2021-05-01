@@ -7,6 +7,7 @@ from RocketTurret import RocketTurret, RocketMissile
 from Obstacle import Obstacle
 from Collision import solveCollisions
 from LaserTurret import LaserTurret
+from MapLoader import MapLoader
 
 MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
@@ -23,38 +24,41 @@ class Level:
 
         self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addPlayerMissile(self.player.shoot()))}
 
-        self.obstacles = [Obstacle(400, 400, 100, 100, (50,50,50), points = ((0, 50), (90, 80), (100, 10), (0,0)))]
-        self.obstacles.append(Obstacle(-100, -100, 1200, 100, visible = False))
-        self.obstacles.append(Obstacle(-100, -100, 100, 1200, visible = False))
-        self.obstacles.append(Obstacle(-100, 1000, 1200, 100, visible=False))
+        # self.obstacles = [Obstacle(400, 400, 100, 100, (50,50,50), points = ((0, 50), (90, 80), (100, 10), (0,0)))]
+        # self.obstacles.append(Obstacle(-100, -100, 1200, 100, visible = False))
+        # self.obstacles.append(Obstacle(-100, -100, 100, 1200, visible = False))
+        # self.obstacles.append(Obstacle(-100, 1000, 1200, 100, visible=False))
 
 
-        self.mapEl = []
+        self.mapEl = set()
         self.playerMissiles = set()
         self.missiles = set()
-        self.turrets = []
+        self.turrets = set()
+
+        M=MapLoader(self,0)
+        M.load()
 
         # letter replace next lines with map loader
-        el = MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
-        self.addMapEl(el)
-        el = MapElement(1000, 1000, 100, 100, "space1.jpeg")  # if el is a rect it not need cords
-        self.addMapEl(el)
-        el = MapElement(1000, 400, 1000, 2000, "space1.jpeg")
-        self.addMapEl(el)
+        # el = MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
+        # self.addMapEl(el)
+        # el = MapElement(1000, 1000, 100, 100, "space1.jpeg")  # if el is a rect it not need cords
+        # self.addMapEl(el)
+        # el = MapElement(1000, 400, 1000, 2000, "space1.jpeg")
+        # self.addMapEl(el)
 
 
-        self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
-        self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,600,self.player))
+        # self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
+        # self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,600,self.player))
 
-        for i in range(5,50, 5):
-            self.turrets.append(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
-            self.turrets.append(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
-            self.turrets.append(LaserTurret(i*200+550,800,75,40,4,pi/2,pi,3,self,20))
-            self.obstacles.append(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
-            self.obstacles.append(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
-            self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
-
-        self.obstacles.append(Obstacle(8900, -100, 100, 1200, visible = False))
+        # for i in range(5,50, 5):
+        #     self.turrets.append(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
+        #     self.turrets.append(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
+        #     self.turrets.append(LaserTurret(i*200+550,800,75,20,40,4,pi/2,pi,3,self))
+        #     self.obstacles.append(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
+        #     self.obstacles.append(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
+        #     self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
+        #
+        # self.obstacles.append(Obstacle(8900, -100, 100, 1200, visible = False))
 
 
     def filterElements(self, elements):
