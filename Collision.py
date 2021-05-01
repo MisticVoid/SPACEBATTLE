@@ -95,13 +95,13 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
     def Player_Missile(player, missile):
         if inPolygon((missile.posX, missile.posY), player.getPoints()):
             #print("Collision of player and missile")
-            player.hit(10)
+            player.hit(missile.damage)
             return missile
 
     def Turret_Missile(turret, missile):
         if inPolygon((missile.posX, missile.posY), turret.getPoints()):
             #print("Collision of turret and missile")
-            turret.getDamage(10)
+            turret.getDamage(missile.damage)
             return missile
 
     def Obstacle_Missile(obstacle, missile):
