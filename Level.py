@@ -35,7 +35,7 @@ class Level:
         self.missiles = set()
         self.turrets = set()
 
-        M=MapLoader(self,0)
+        M=MapLoader(self,1)
         M.load()
 
         # letter replace next lines with map loader

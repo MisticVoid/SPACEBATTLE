@@ -65,7 +65,7 @@ class MapLoader:
         vis = f.readline()[:-1] == 'T'
         N= int(f.readline()[:-1])
         if N==0:
-            return Obstacle(*tuple(C),visible=vis)
+            return Obstacle(*tuple(C),visible=vis,color=(50,50,50))
         P=[0]*N
         for i in range(N):
             x=int(f.readline()[:-1])
