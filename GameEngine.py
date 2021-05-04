@@ -4,15 +4,17 @@ import pygame
 
 
 class GameEngine:
-    def __init__(self, playerProperties, sizeX = 1920, sizeY=1020):
-        pygame.init()
+    def __init__(self, playerProperties, menu, level, sizeX = 1920, sizeY=1020):
+        #pygame.init()
         pygame.display.set_caption("Space Battle")
         self.runG = False
+        self.menu = menu
 
-        self.level = Level(playerProperties, sizeX, sizeY, self)
+        self.level = Level(playerProperties, sizeX, sizeY, self, menu.screen, level)
 
     def stop(self):
         self.runG = False
+        self.menu.pause()
 
     def run(self):
         self.level.screen.blit(self.level.background, (0, 0))

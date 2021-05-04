@@ -12,11 +12,12 @@ from MapLoader import MapLoader
 MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
 class Level:
-    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine):
+    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level):
         self.screenSizeX = sizeX
         self.screenSizeY = sizeY
 
-        self.screen = pygame.display.set_mode((sizeX, sizeY))
+        #self.screen = pygame.display.set_mode((sizeX, sizeY))
+        self.screen = screen
         self.background = pygame.Surface((sizeX, sizeY))
         self.engine = gameEngine
 
@@ -35,7 +36,9 @@ class Level:
         self.missiles = set()
         self.turrets = set()
 
-        M=MapLoader(self,1)
+        #print("Level:", level)
+        level = 1 # to remove later
+        M=MapLoader(self,level)
         M.load()
 
         # letter replace next lines with map loader
@@ -104,7 +107,7 @@ class Level:
         self.player.nextCycle(deltaTime)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.engine.stop()
+                pygame.quit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key in self.keyControl:
@@ -131,6 +134,8 @@ class Level:
             self.player.accelerate(deltaTime)
         if keys[K_s]:
             self.player.reduceSpeed(deltaTime)
+        if keys[K_ESCAPE]:
+            self.engine.stop()
 
         # turrets = self.filterElements(self.turrets)
         # obstacles = self.filterElements(self.obstacles)
