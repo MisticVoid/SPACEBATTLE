@@ -9,12 +9,14 @@ from Collision import solveCollisions
 from LaserTurret import LaserTurret
 from MapLoader import MapLoader
 
-MOUSE_CONTROL = True  # change to False to back to a/d rotating
+#MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
 class Level:
-    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level):
+    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level, settings):
         self.screenSizeX = sizeX
         self.screenSizeY = sizeY
+
+        self.MOUSE_CONTROL = settings['MOUSE_CONTROL']
 
         #self.screen = pygame.display.set_mode((sizeX, sizeY))
         self.screen = screen
@@ -37,7 +39,7 @@ class Level:
         self.turrets = set()
 
         #print("Level:", level)
-        level = 1 # to remove later
+        #level = 1 # to remove later
         M=MapLoader(self,level)
         M.load()
 
@@ -98,12 +100,24 @@ class Level:
                 toDel.add(element)
         self.playerMissiles -= toDel
 
+    def win(self):
+        self.engine.win()
 
+    def lose(self):
+        self.engine.lose()
 
     def addMapEl(self,element):
         self.mapEl.append(element)
 
     def update(self, deltaTime):
+
+        if self.player.health <= 0:
+            self.lose()
+
+        if len(self.turrets) == 0:
+            self.win()
+
+
         self.player.nextCycle(deltaTime)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -121,7 +135,7 @@ class Level:
 
         keys = pygame.key.get_pressed()
 
-        if MOUSE_CONTROL:
+        if self.MOUSE_CONTROL:
             mosePos=pygame.mouse.get_pos()
             #print(mosePos,self.player.posX,self.player.posY)
             self.player.followMouse(deltaTime,(mosePos[0]-self.screenSizeX//2, mosePos[1]-self.screenSizeY//2))
@@ -150,9 +164,13 @@ class Level:
         for missile in self.playerMissiles:
             missile.nextCycle(deltaTime)
 
+        toRemove = set()
         for turret in self.turrets:
             turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
             self.addMissile(turret.shoot(self.player.posX,self.player.posY))
+            if turret.health <= 0:
+                toRemove.add(turret)
+        self.turrets -= toRemove
 
         # for turret in turrets:
         #     turret.nextCycle(deltaTime,self.player.posX,self.player.posY)

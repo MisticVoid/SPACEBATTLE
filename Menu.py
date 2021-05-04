@@ -1,6 +1,10 @@
 import pygame_menu
 import pygame
 from PauseMenu import PauseMenu
+from SettingsMenu import SettingsMenu
+from WinMenu import WinMenu
+from LoseMenu import LoseMenu
+from CreditsScreen import CreditsScreen
 from GameEngine import *
 
 playerProperties = {"posX": 100, "posY": 100, "speed": 0, "maxSpeedForward": 400, "maxSpeedBackward": 100,
@@ -8,7 +12,7 @@ playerProperties = {"posX": 100, "posY": 100, "speed": 0, "maxSpeedForward": 400
                                 "rotationSpeed": 2 * pi, "sizeX": 50, "sizeY": 25, "maxHealth": 100, "damage": 10,
                                 "shotDelayTime": 1, "missileSpeed": 1000}
 
-
+MAX_LEVEL=2
 
 class Menu:
     def __init__(self,  sizeX=1920, sizeY=1020):
@@ -23,16 +27,20 @@ class Menu:
         mytheme.background_color = (0,0,0,0)
         self.menu = pygame_menu.Menu(sizeY, sizeX, 'Main menu', theme=mytheme)
 
-        self.menu.add.button('Play', self.startGame)
-        self.menu.add.button('Settings', self.setSettings)
-        self.menu.add.selector('Level :', [(str(i), i) for i in range(10)], onchange=self.setLevel)
-        self.menu.add.selector('Level :', [(" Easy ", 0), ("Medium", 1), (" Hard ", 2)], onchange=self.setDifficulty)
-        self.menu.add.button('Quit', pygame_menu.events.EXIT)
+
 
         self.pauseMenu = PauseMenu(self, sizeX, sizeY)
+        self.settingsMenu = SettingsMenu(self, sizeX, sizeY)
+        self.winMenu = WinMenu(self, sizeX, sizeY)
+        self.loseMenu = LoseMenu(self, sizeX, sizeY)
+        self.creditsScreen = CreditsScreen(self, sizeX, sizeY)
 
-    def setSettings(self):
-        pass
+        self.menu.add.button('Play', self.startGame)
+        self.menu.add.button('Settings', self.settingsMenu.menu)
+        self.lvlSelector = self.menu.add.selector('Level :', [(str(i), i) for i in range(MAX_LEVEL)], onchange=self.setLevel, selector_id='lvl_selector')
+        self.menu.add.selector('Difficulty :', [(" Easy ", 0), ("Medium", 1), (" Hard ", 2)], onchange=self.setDifficulty)
+        self.menu.add.button('Quit', pygame_menu.events.EXIT)
+
 
     def setLevel(self, _, level):
         self.level = level
@@ -40,16 +48,37 @@ class Menu:
     def setDifficulty(self, _, val):
         pass
 
+    def nextLevel(self):
+        self.level += 1
+        self.startGame()
+
     def startGame(self):
-        self.engine = GameEngine(playerProperties, self, self.level)
+        self.engine = GameEngine(playerProperties, self, self.level, settings = self.settingsMenu.getSettings())
+        self.menu.disable()
         self.engine.run()
 
     def runMenu(self):
+        self.menu.enable()
         self.menu.mainloop(self.screen)
 
+    def runSettings(self):
+        self.settingsMenu.runMenu(self)
 
     def pause(self):
         self.pauseMenu.runMenu()
+
+    def win(self):
+        if self.level+1 < MAX_LEVEL:
+            self.winMenu.runMenu()
+        else:
+            self.creditsScreen.runMenu()
+            print("You won")
+
+    def lose(self):
+        self.loseMenu.runMenu()
+
+    def getScreen(self):
+        return self.screen
 
 
 if __name__ == "__main__":
