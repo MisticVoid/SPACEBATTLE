@@ -199,7 +199,7 @@ class Level:
 
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
 
-        for missile in self.filterMissiles():#self.missiles:
+        for missile in self.missiles:
             self.blend(self.screen,missile,x,y,True)
 
         #for missile in self.playerMissiles:
@@ -211,7 +211,7 @@ class Level:
         for obstacle in self.filterElements(self.obstacles):
             self.blend(self.screen,obstacle,x,y)
 
-        for turret in self.filterElements(self.turrets):
+        for turret in self.turrets:
             turret.effect(self.screen,self.screenSizeX,self.screenSizeY,x,y)
         pygame.display.flip()
 
