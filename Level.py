@@ -40,8 +40,6 @@ class Level:
         self.turrets = set()
         self.obstacles = set()
 
-        #print("Level:", level)
-        #level = 1 # to remove later
         M=MapLoader(self,level)
 
         M.load()
@@ -59,8 +57,8 @@ class Level:
 
         # self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
         # self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,600,self.player))
-        """
-        for i in range(5,50, 5):
+        #"""
+        for i in range(5,1000, 5):
              self.turrets.add(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
              self.turrets.add(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
              self.turrets.add(LaserTurret(i*200+550,800,75,20,40,4,pi/2,pi,3,self))
@@ -69,11 +67,11 @@ class Level:
              #self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
 
         self.obstacles.add(Obstacle(8900, -100, 100, 1200, visible = False))
-        """
+        #"""
         self.sectors = Sectors(self.turrets, self.obstacles)
 
 
-    def filterElements(self, elements):
+    def filterElements(self, elements, X=0):
         playerPosX, playerPosY = int(self.player.posX), int(self.player.posY)
         filtered = []
         for element in elements:
@@ -81,8 +79,8 @@ class Level:
             yu = element.posY - playerPosY + self.screenSizeY // 2
             xr = xl + element.sizeX
             yd = yu + element.sizeY
-            if (0 <= xl <= self.screenSizeX or 0 <= xr <= self.screenSizeX or (xl <= 0 and xr >= self.screenSizeX)) and (
-                    0 <= yu <= self.screenSizeY or 0 <= yd <= self.screenSizeY or (yu <= 0 and yd >= self.screenSizeY)):
+            if (-X <= xl <= self.screenSizeX + X or -X <= xr <= self.screenSizeX + X or (xl <= -X and xr >= self.screenSizeX + X)) and (
+                    -X <= yu <= self.screenSizeY + X or -X <= yd <= self.screenSizeY + X or (yu <= -X and yd >= self.screenSizeY + X)):
                 filtered.append(element)
         return filtered
 
@@ -126,7 +124,6 @@ class Level:
         if len(self.turrets) == 0:
             self.win()
 
-
         self.player.nextCycle(deltaTime)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -160,9 +157,8 @@ class Level:
         if keys[K_ESCAPE]:
             self.engine.stop()
 
-        # turrets = self.filterElements(self.turrets)
-        # obstacles = self.filterElements(self.obstacles)
-        # self.filterMissiles()
+        #obstacles = self.filterElements(self.obstacles)
+        #self.filterMissiles()
 
         solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, self.sectors, deltaTime)
         #solveCollisions(self.player, obstacles, turrets, self.playerMissiles, self.missiles, deltaTime)
@@ -173,6 +169,7 @@ class Level:
         for missile in self.playerMissiles:
             missile.nextCycle(deltaTime)
 
+        """
         toRemove = set()
         for turret in self.turrets:
             turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
@@ -180,10 +177,17 @@ class Level:
             if turret.health <= 0:
                 toRemove.add(turret)
         self.removeDeadTurrets(toRemove)
+        """
+        turrets = self.filterElements(self.turrets, 2000)
 
-        # for turret in turrets:
-        #     turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
-        #     self.addMissile(turret.shoot(self.player.posX,self.player.posY))
+        toRemove = set()
+        for turret in turrets:
+            turret.nextCycle(deltaTime, self.player.posX, self.player.posY)
+            self.addMissile(turret.shoot(self.player.posX, self.player.posY))
+            if turret.health <= 0:
+                toRemove.add(turret)
+        self.removeDeadTurrets(toRemove)
+
 
     def display(self):
         s = self.player.draw()

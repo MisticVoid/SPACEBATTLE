@@ -24,10 +24,16 @@ class LaserTurret(AbstractTurret):
     def isOnLine(self):
         self.ClosePointSys.reset()
         center = (self.posX + self.sizeX // 2, self.posY + self.sizeY // 2)
+
+        points = [center]
+        points.extend(self.Level.player.getPoints())
+
         front = self.getPoint()
         self.ClosePointSys.setLine(*twoPointToLine(center, front), center, front)
-        self.ClosePointSys.analyzeGroupShapes(self.Level.turrets)
-        self.ClosePointSys.analyzeGroupShapes(self.Level.obstacles)
+        #self.ClosePointSys.analyzeGroupShapes(self.Level.turrets)
+        #self.ClosePointSys.analyzeGroupShapes(self.Level.obstacles)
+        self.ClosePointSys.analyzeGroupShapes(self.Level.sectors.getTurrets(points))
+        self.ClosePointSys.analyzeGroupShapes(self.Level.sectors.getObstacles(points))
         x, y = self.ClosePointSys.getPoint()
         #print("///",x,y)
         self.ClosePointSys.analyzeShape(self.Level.player.getPoints())
