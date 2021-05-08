@@ -15,7 +15,6 @@ class WinMenu:
 
     def runMainMenu(self):
         self.menu.disable()
-        self.mainMenu.runMenu()
 
 
     def runMenu(self):
@@ -28,4 +27,4 @@ class WinMenu:
         self.mainMenu.nextLevel()
 
     def getScreen(self):
-        return self.mainMenu.getScreen
+        return self.mainMenu.getScreen()

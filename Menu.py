@@ -9,8 +9,8 @@ from GameEngine import *
 
 playerProperties = {"posX": 100, "posY": 100, "speed": 0, "maxSpeedForward": 400, "maxSpeedBackward": 100,
                                 "acceleration": 100, "angle": 0,
-                                "rotationSpeed": 2 * pi, "sizeX": 50, "sizeY": 25, "maxHealth": 100, "damage": 10,
-                                "shotDelayTime": 1, "missileSpeed": 1000}
+                                "rotationSpeed": 2 * pi, "sizeX": 50, "sizeY": 25, "maxHealth": 200, "damage": 20,
+                                "shotDelayTime": 0.5, "missileSpeed": 1000}
 
 MAX_LEVEL=2
 
@@ -54,8 +54,13 @@ class Menu:
 
     def startGame(self):
         self.engine = GameEngine(playerProperties, self, self.level, settings = self.settingsMenu.getSettings())
-        self.menu.disable()
-        self.engine.run()
+        score = self.engine.run()
+        if score == None:
+            self.runMenu()
+        elif score == 'Win':
+            self.win()
+        elif score == 'Lose':
+            self.lose()
 
     def runMenu(self):
         self.menu.enable()
@@ -72,7 +77,6 @@ class Menu:
             self.winMenu.runMenu()
         else:
             self.creditsScreen.runMenu()
-            print("You won")
 
     def lose(self):
         self.loseMenu.runMenu()

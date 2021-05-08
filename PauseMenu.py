@@ -15,7 +15,6 @@ class PauseMenu:
 
     def runMainMenu(self):
         self.menu.disable()
-        self.mainMenu.runMenu()
 
 
     def runMenu(self):
@@ -25,7 +24,7 @@ class PauseMenu:
 
     def resumeGame(self):
         self.menu.disable()
-        self.mainMenu.engine.run()
+        self.mainMenu.engine.keepRunning()
 
     def getScreen(self):
-        return self.mainMenu.getScreen
+        return self.mainMenu.getScreen()

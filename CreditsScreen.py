@@ -20,7 +20,6 @@ class CreditsScreen:
 
     def runMainMenu(self):
         self.menu.disable()
-        self.mainMenu.runMenu()
 
 
     def runMenu(self):
@@ -28,4 +27,4 @@ class CreditsScreen:
         self.menu.mainloop(self.getScreen())
 
     def getScreen(self):
-        return self.mainMenu.getScreen
+        return self.mainMenu.getScreen()

@@ -4,10 +4,11 @@ from TurretAbstract import AbstractTurret
 from Obstacle import Obstacle
 from Geometry import *
 from math import sin, cos
+from Sectors import Sectors
 
 
 
-def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[AbstractTurret], playerMissiles: list[AbstractMissile], missiles: list[AbstractMissile], deltaTime):
+def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[AbstractTurret], playerMissiles: list[AbstractMissile], missiles: list[AbstractMissile], sectors: Sectors, deltaTime):
 
     def Player_Obstacle(player, obstacle):
         if polygonsCollide(player.getPoints(), obstacle.getPoints() )[0]:
@@ -109,28 +110,50 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
             #print("Collision of missile and obstacle")
             return missile
 
-
+    """
     for turret in turrets:
         Player_Turret(player, turret)
 
     for obstacle in obstacles:
         Player_Obstacle(player, obstacle)
+    """
+
+    for turret in sectors.getTurrets(player.getPoints()):
+        Player_Turret(player, turret)
+
+    for obstacle in sectors.getObstacles(player.getPoints()):
+        Player_Obstacle(player, obstacle)
 
     missilesToRemove = set()
+    #compare = set()
+
 
     for missile in playerMissiles:
-        for turret in turrets:
+        missilesToRemove.add(None)
+        #for turret in turrets:
+        #    compare.add(Turret_Missile(turret, missile))
+        #for obstacle in obstacles:
+        #    compare.add(Obstacle_Missile(obstacle, missile))
+        for turret in sectors.getTurrets([(missile.posX, missile.posY)]):
             missilesToRemove.add(Turret_Missile(turret, missile))
-        for obstacle in obstacles:
+
+        for obstacle in sectors.getObstacles([(missile.posX, missile.posY)]):
             missilesToRemove.add(Obstacle_Missile(obstacle, missile))
 
+    #if len(missilesToRemove) != len(compare) or len(missilesToRemove) != len(missilesToRemove & compare):
+    #    print("difference for player missiles")
     playerMissiles -= missilesToRemove
+
     missilesToRemove = set()
+
 
     for missile in missiles:
         missilesToRemove.add(Player_Missile(player, missile))
 
-        for obstacle in obstacles:
+        for obstacle in sectors.getObstacles([(missile.posX, missile.posY)]):
             missilesToRemove.add(Obstacle_Missile(obstacle, missile))
+
+        #for obstacle in obstacles:
+        #    compare.add(Obstacle_Missile(obstacle, missile))
 
     missiles -= missilesToRemove

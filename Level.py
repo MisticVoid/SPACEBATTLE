@@ -8,6 +8,7 @@ from Obstacle import Obstacle
 from Collision import solveCollisions
 from LaserTurret import LaserTurret
 from MapLoader import MapLoader
+from Sectors import Sectors
 
 #MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
@@ -37,11 +38,15 @@ class Level:
         self.playerMissiles = set()
         self.missiles = set()
         self.turrets = set()
+        self.obstacles = set()
 
         #print("Level:", level)
         #level = 1 # to remove later
         M=MapLoader(self,level)
+
         M.load()
+
+
 
         # letter replace next lines with map loader
         # el = MapElement(0, 0, 1000, 1000, "space1.jpeg", ((0, 0), (1000, 0), (1000, 1000), (0, 500)))
@@ -54,16 +59,18 @@ class Level:
 
         # self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
         # self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,600,self.player))
+        """
+        for i in range(5,50, 5):
+             self.turrets.add(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
+             self.turrets.add(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
+             self.turrets.add(LaserTurret(i*200+550,800,75,20,40,4,pi/2,pi,3,self))
+             self.obstacles.add(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
+             self.obstacles.add(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
+             #self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
 
-        # for i in range(5,50, 5):
-        #     self.turrets.append(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
-        #     self.turrets.append(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
-        #     self.turrets.append(LaserTurret(i*200+550,800,75,20,40,4,pi/2,pi,3,self))
-        #     self.obstacles.append(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
-        #     self.obstacles.append(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
-        #     self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
-        #
-        # self.obstacles.append(Obstacle(8900, -100, 100, 1200, visible = False))
+        self.obstacles.add(Obstacle(8900, -100, 100, 1200, visible = False))
+        """
+        self.sectors = Sectors(self.turrets, self.obstacles)
 
 
     def filterElements(self, elements):
@@ -83,22 +90,20 @@ class Level:
 
     def filterMissiles(self):
         playerPosX, playerPosY = int(self.player.posX), int(self.player.posY)
-        toDel = set()
+        filtered = []
         for element in self.missiles:
-            if not isinstance(element, RocketMissile):
-                x = element.posX - playerPosX + self.screenSizeX // 2
-                y = element.posY - playerPosY + self.screenSizeY // 2
-                if not((0 <= x <= self.screenSizeX) and (0 <= y <= self.screenSizeY)):
-                    toDel.add(element)
+            x = element.posX - playerPosX + self.screenSizeX // 2
+            y = element.posY - playerPosY + self.screenSizeY // 2
+            if ((0 <= x <= self.screenSizeX) and (0 <= y <= self.screenSizeY)):
+                filtered.append(element)
 
-        self.missiles -= toDel
-        toDel = set()
         for element in self.playerMissiles:
             x = element.posX - playerPosX + self.screenSizeX // 2
             y = element.posY - playerPosY + self.screenSizeY // 2
-            if not ((0 <= x <= self.screenSizeX) and (0 <= y <= self.screenSizeY)):
-                toDel.add(element)
-        self.playerMissiles -= toDel
+            if ((0 <= x <= self.screenSizeX) and (0 <= y <= self.screenSizeY)):
+                filtered.append(element)
+
+        return filtered
 
     def win(self):
         self.engine.win()
@@ -108,6 +113,10 @@ class Level:
 
     def addMapEl(self,element):
         self.mapEl.append(element)
+
+    def removeDeadTurrets(self, toRemove):
+        self.sectors.removeTurrets(toRemove)
+        self.turrets -= toRemove
 
     def update(self, deltaTime):
 
@@ -155,7 +164,7 @@ class Level:
         # obstacles = self.filterElements(self.obstacles)
         # self.filterMissiles()
 
-        solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, deltaTime)
+        solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, self.sectors, deltaTime)
         #solveCollisions(self.player, obstacles, turrets, self.playerMissiles, self.missiles, deltaTime)
 
         for missile in self.missiles:
@@ -170,7 +179,7 @@ class Level:
             self.addMissile(turret.shoot(self.player.posX,self.player.posY))
             if turret.health <= 0:
                 toRemove.add(turret)
-        self.turrets -= toRemove
+        self.removeDeadTurrets(toRemove)
 
         # for turret in turrets:
         #     turret.nextCycle(deltaTime,self.player.posX,self.player.posY)
@@ -181,24 +190,24 @@ class Level:
         x, y = int(self.player.posX), int(self.player.posY)
         self.screen.fill(pygame.Color(0, 0, 0))
 
-        for element in self.mapEl:
+        for element in self.filterElements(self.mapEl):
             self.blend(self.screen,element,x,y)
 
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
 
-        for missile in self.missiles:
+        for missile in self.filterMissiles():#self.missiles:
             self.blend(self.screen,missile,x,y,True)
 
-        for missile in self.playerMissiles:
-            self.blend(self.screen,missile,x,y,True)
+        #for missile in self.playerMissiles:
+        #    self.blend(self.screen,missile,x,y,True)
 
-        for turret in self.turrets:
+        for turret in self.filterElements(self.turrets):
             self.blend(self.screen,turret,x,y)
 
-        for obstacle in self.obstacles:
+        for obstacle in self.filterElements(self.obstacles):
             self.blend(self.screen,obstacle,x,y)
 
-        for turret in self.turrets:
+        for turret in self.filterElements(self.turrets):
             turret.effect(self.screen,self.screenSizeX,self.screenSizeY,x,y)
         pygame.display.flip()
 

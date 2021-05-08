@@ -24,6 +24,9 @@ class AbstractMissile(abc.ABC):
     def collision(self):
         pass
 
+    def getPoints(self):
+        return [self.posX, self.posY]
+
     def draw(self) -> Surface:
         return self.visual.draw()
 

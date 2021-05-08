@@ -14,15 +14,14 @@ class LoseMenu:
 
     def runMainMenu(self):
         self.menu.disable()
-        self.mainMenu.runMenu()
 
     def runMenu(self):
         self.menu.enable()
-        self.menu.mainloop(self.getScreen)
+        self.menu.mainloop(self.getScreen())
 
     def retry(self):
         self.menu.disable()
         self.mainMenu.startGame()
 
     def getScreen(self):
-        return self.mainMenu.getScreen
+        return self.mainMenu.getScreen()

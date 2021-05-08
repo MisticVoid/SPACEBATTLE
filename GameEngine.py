@@ -7,9 +7,16 @@ class GameEngine:
     def __init__(self, playerProperties, menu, level, sizeX = 1920, sizeY=1020, settings = None):
         #pygame.init()
         pygame.display.set_caption("Space Battle")
+        loading = MapElement(0, 0, sizeX, sizeY, "loading.jpg")
+        surf = loading.draw()
+        menu.getScreen().blit(surf, (0,0))
+        pygame.display.flip()
+
+        #time.sleep(1)
+
         self.runG = False
         self.menu = menu
-
+        self.score = None
         self.level = Level(playerProperties, sizeX, sizeY, self, menu.screen, level, settings=settings)
 
     def stop(self):
@@ -23,6 +30,10 @@ class GameEngine:
     def lose(self):
         self.score = "Lose"
         self.runG = False
+
+    def keepRunning(self):
+        self.runG = True
+
 
 
     def run(self):
@@ -40,10 +51,7 @@ class GameEngine:
             i += 1
             i %= 10
             print("fps:", sum(times))
-        if self.score == "Lose":
-            self.menu.lose()
-        else:
-            self.menu.win()
+        return self.score
 
 
 
