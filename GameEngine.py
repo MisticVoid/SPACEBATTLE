@@ -4,15 +4,37 @@ import pygame
 
 
 class GameEngine:
-    def __init__(self, playerProperties, sizeX = 1920, sizeY=1020):
-        pygame.init()
+    def __init__(self, playerProperties, menu, level, sizeX = 1920, sizeY=1020, settings = None):
+        #pygame.init()
         pygame.display.set_caption("Space Battle")
-        self.runG = False
+        loading = MapElement(0, 0, sizeX, sizeY, "loading.jpg")
+        surf = loading.draw()
+        menu.getScreen().blit(surf, (0,0))
+        pygame.display.flip()
 
-        self.level = Level(playerProperties, sizeX, sizeY, self)
+        #time.sleep(1)
+
+        self.runG = False
+        self.menu = menu
+        self.score = None
+        self.level = Level(playerProperties, sizeX, sizeY, self, menu.screen, level, settings=settings)
 
     def stop(self):
         self.runG = False
+        self.menu.pause()
+
+    def win(self):
+        self.score = "Win"
+        self.runG = False
+
+    def lose(self):
+        self.score = "Lose"
+        self.runG = False
+
+    def keepRunning(self):
+        self.runG = True
+
+
 
     def run(self):
         self.level.screen.blit(self.level.background, (0, 0))
@@ -29,8 +51,7 @@ class GameEngine:
             i += 1
             i %= 10
             print("fps:", sum(times))
-        else:
-            pygame.quit()
+        return self.score
 
 
 
