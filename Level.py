@@ -202,8 +202,8 @@ class Level:
         for missile in self.missiles:
             self.blend(self.screen,missile,x,y,True)
 
-        #for missile in self.playerMissiles:
-        #    self.blend(self.screen,missile,x,y,True)
+        for missile in self.playerMissiles:
+            self.blend(self.screen,missile,x,y,True)
 
         for turret in self.filterElements(self.turrets):
             self.blend(self.screen,turret,x,y)
