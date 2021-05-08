@@ -20,6 +20,10 @@ class LaserTurret(AbstractTurret):
         self.damage=damage
         self.visual = LaserTurretVisual(size,self)
         self.target=None
+        self.playerHitEffect=False
+        self.timePlayerHitEffect=0
+        self.lastDelta=0
+        self.hitPos=[0,0]
 
     def isOnLine(self):
         self.ClosePointSys.reset()
@@ -53,6 +57,8 @@ class LaserTurret(AbstractTurret):
             self.aimingTime = 0
             self.currentCoolDown = self.coolDown
             self.Level.player.hit(self.damage)
+            self.playerHitEffect = True
+            self.timePlayerHitEffect = 0.3
         return None
 
     def canShoot(self, posX: float, posY: float):
@@ -61,6 +67,7 @@ class LaserTurret(AbstractTurret):
 
     def nextCycle(self, deltaTime: float, posX: float, posY: float) -> None:
         super().nextCycle(deltaTime,posX,posY)
+        self.lastDelta=deltaTime
         #print(self.angle)
         self.isOnLine()
         self.correctAimingTime(deltaTime)
@@ -74,4 +81,10 @@ class LaserTurret(AbstractTurret):
             target[0] = target[0] - x+screenX//2
             target[1] = target[1] - y+screenY//2
             draw.line(screen,Color(255,0,0),begin,target)
+        if self.playerHitEffect:
+            target2 = (screenX // 2,screenY // 2)
+            draw.circle(screen,Color(int(255*(1-self.timePlayerHitEffect/0.3)),int(255*(self.timePlayerHitEffect/0.3/2)),0),target2,20*(1-self.timePlayerHitEffect/0.3))
+            self.timePlayerHitEffect-=self.lastDelta
+            if self.timePlayerHitEffect<=0:
+                self.playerHitEffect=False
 
