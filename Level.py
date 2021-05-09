@@ -58,15 +58,16 @@ class Level:
         # self.turrets.append(StandardTurret(500,500,75,20,100,2,pi/2,0,1000))
         # self.turrets.append(RocketTurret(500,700,75,100,100,5,pi/2,0,600,self.player))
         #"""
-        for i in range(5,1000, 5):
-             self.turrets.add(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
-             self.turrets.add(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
-             self.turrets.add(LaserTurret(i*200+550,800,75,20,40,4,pi/2,pi,3,self))
-             self.obstacles.add(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
-             self.obstacles.add(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
-             #self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
+        if level==0:
+            for i in range(5,1000, 5):
+                 self.turrets.add(StandardTurret(i*200+500, 500, 75, 20, 100, 2, pi / 2, 0, 1000))
+                 self.turrets.add(RocketTurret(i*200+500, 700, 75, 100, 100, 5, pi / 2, 0, 600, self.player))
+                 self.turrets.add(LaserTurret(i*200+550,800,75,20,40,4,pi/2,pi,3,self))
+                 self.obstacles.add(Obstacle(200 * i - 100, -100, 1200, 100, visible=False))
+                 self.obstacles.add(Obstacle(200 * i - 100, 1000, 1200, 100, visible=False))
+                 #self.addMapEl( MapElement(200*i, 0, 1000, 1000, "space1.jpeg", ) )
 
-        self.obstacles.add(Obstacle(8900, -100, 100, 1200, visible = False))
+            self.obstacles.add(Obstacle(8900, -100, 100, 1200, visible = False))
         #"""
         self.sectors = Sectors(self.turrets, self.obstacles)
 
