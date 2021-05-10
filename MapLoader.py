@@ -28,11 +28,19 @@ class MapLoader:
                 self.level.obstacles.add(self.loadObstacle(f))
             elif line=="Element":
                 self.level.mapEl.add(self.loadElement(f))
+            elif line=="PlayerPos":
+                self.playerPos(f)
             else:
                 print("unknown marker")
                 data=False
 
         f.close()
+
+    def playerPos(self,f):
+        line = f.readline()[:-1]
+        self.level.player.posX=int(line)
+        line = f.readline()[:-1]
+        self.level.player.posY = int(line)
 
     def loadTurret(self,f):
         line = f.readline()[:-1]

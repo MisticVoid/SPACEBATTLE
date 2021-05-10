@@ -12,7 +12,7 @@ playerProperties = {"posX": 100, "posY": 100, "speed": 0, "maxSpeedForward": 400
                                 "rotationSpeed": 2 * pi, "sizeX": 50, "sizeY": 25, "maxHealth": 2000, "damage": 20,
                                 "shotDelayTime": 0.5, "missileSpeed": 1000}
 
-MAX_LEVEL=2
+MAX_LEVEL=3
 
 class Menu:
     def __init__(self,  sizeX=1920, sizeY=1020):
