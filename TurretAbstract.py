@@ -1,6 +1,10 @@
 import abc
+import os
 from typing import *
 from math import pi
+
+import pygame
+
 from MisselAbstract import AbstractMissile
 from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient,squarePointDis
 
@@ -20,6 +24,7 @@ class AbstractTurret(abc.ABC):
         self.disLim = 10
         self.visual = None
 
+
     def correctCoolDown(self,deltaTime: float) -> None:
         self.currentCoolDown -= deltaTime
         self.currentCoolDown = max(0, self.currentCoolDown)
@@ -37,11 +42,12 @@ class AbstractTurret(abc.ABC):
         self.visual.recolorBase(self.health / self.maxHealth)
         return self.health
 
-    def shoot(self,posX:float,posY:float) -> Union[AbstractMissile, None]:
+    def shoot(self,posX:float,posY:float, sounds) -> Union[AbstractMissile, None]:
         if self.currentCoolDown > 0 or not self.canShoot(posX,posY) or squarePointDis((posX,posY),(self.posX,self.posY))>4000000:
             return None
         else:
             self.currentCoolDown = self.coolDown
+            sounds.play(self.shotSound())
             point = self.getPoint()
             return self.missilePlacer.placeMissile((self.posX+self.sizeX // 2, self.posY+self.sizeY // 2), point,
                                                    self.sizeX*0.45, self.angle)
@@ -81,6 +87,12 @@ class AbstractTurret(abc.ABC):
 
     def makeEffect(self,screen,screenX,screenY,x,y):
         pass
+
+    def shotSound(self):
+        pass
+
+
+
 
 
 

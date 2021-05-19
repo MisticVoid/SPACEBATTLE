@@ -7,7 +7,7 @@ from LoseMenu import LoseMenu
 from CreditsScreen import CreditsScreen
 from GameEngine import *
 
-playerProperties = {"posX": 100, "posY": 100, "speed": 0, "maxSpeedForward": 400, "maxSpeedBackward": 100,
+playerDefaultProperties = {"posX": 100, "posY": 100, "speed": 0, "maxSpeedForward": 400, "maxSpeedBackward": 100,
                                 "acceleration": 100, "angle": 0,
                                 "rotationSpeed": 2 * pi, "sizeX": 50, "sizeY": 25, "maxHealth": 200, "damage": 25,
                                 "shotDelayTime": 0.5, "missileSpeed": 1000}
@@ -17,7 +17,9 @@ MAX_LEVEL=6
 class Menu:
     def __init__(self,  sizeX=1920, sizeY=1020):
         pygame.init()
+        pygame.mixer.init()
         self.level=0
+        self.difficulty = 1.3
         self.sizeX = sizeX
         self.sizeY = sizeY
         self.engine = None
@@ -38,21 +40,26 @@ class Menu:
         self.menu.add.button('Play', self.startGame)
         self.menu.add.button('Settings', self.settingsMenu.menu)
         self.lvlSelector = self.menu.add.selector('Level :', [(str(i), i) for i in range(MAX_LEVEL)], onchange=self.setLevel, selector_id='lvl_selector')
-        self.menu.add.selector('Difficulty :', [(" Easy ", 0), ("Medium", 1), (" Hard ", 2)], onchange=self.setDifficulty)
+        self.menu.add.selector('Difficulty :', [(" Easy ", 1.3), ("Medium", 1), (" Hard ", 0.7)], onchange=self.setDifficulty)
         self.menu.add.button('Quit', pygame_menu.events.EXIT)
+
 
 
     def setLevel(self, _, level):
         self.level = level
 
     def setDifficulty(self, _, val):
-        pass
+        self.difficulty = val
 
     def nextLevel(self):
         self.level += 1
+        self.lvlSelector._right()
         self.startGame()
 
     def startGame(self):
+        playerProperties = playerDefaultProperties.copy()
+        playerProperties["maxHealth"] *= self.difficulty
+        playerProperties["damage"] *= self.difficulty
         self.engine = GameEngine(playerProperties, self, self.level, settings = self.settingsMenu.getSettings())
         score = self.engine.run()
         if score == None:
@@ -83,12 +90,6 @@ class Menu:
 
     def getScreen(self):
         return self.screen
-
-
-if __name__ == "__main__":
-    pygame.init()
-    menu = Menu()
-    menu.runMenu()
 
 
 

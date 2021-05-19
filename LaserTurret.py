@@ -52,11 +52,13 @@ class LaserTurret(AbstractTurret):
         else:
             self.aimingTime=0
 
-    def shoot(self,posX:float,posY:float) -> None:
+    def shoot(self,posX:float,posY:float, sounds) -> None:
         if self.currentCoolDown == 0 and self.canShoot(posX,posY) and squarePointDis((posX,posY),(self.posX,self.posY))<4000000:
             self.aimingTime = 0
             self.currentCoolDown = self.coolDown
             self.Level.player.hit(self.damage)
+            sounds.play("laser")
+
             self.playerHitEffect = True
             self.timePlayerHitEffect = 0.3
         return None

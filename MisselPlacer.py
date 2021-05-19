@@ -1,10 +1,9 @@
-
 from MisselAbstract import AbstractMissile
 from math import sqrt
 
 
 class MisselPlacer:
-    def __init__(self,missileType,kwargs):
+    def __init__(self,missileType, kwargs):
         self.missileType=missileType
         self.kwargs=kwargs
 

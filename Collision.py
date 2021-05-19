@@ -5,10 +5,11 @@ from Obstacle import Obstacle
 from Geometry import *
 from math import sin, cos
 from Sectors import Sectors
+from RocketMissile import RocketMissile
 
 
 
-def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[AbstractTurret], playerMissiles: list[AbstractMissile], missiles: list[AbstractMissile], sectors: Sectors, deltaTime):
+def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[AbstractTurret], playerMissiles: list[AbstractMissile], missiles: list[AbstractMissile], sectors: Sectors, deltaTime, sounds):
 
     def Player_Obstacle(player, obstacle):
         if polygonsCollide(player.getPoints(), obstacle.getPoints() )[0]:
@@ -93,15 +94,17 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
             player.posY -= abs(player.speed)/player.speed * 3 * sin(-player.angle)
 
 
-    def Player_Missile(player, missile):
+    def Player_Missile(player, missile, sounds):
         if inPolygon((missile.posX, missile.posY), player.getPoints()):
             #print("Collision of player and missile")
             player.hit(missile.damage)
+            sounds.play("playerDamage")
             return missile
 
-    def Turret_Missile(turret, missile):
+    def Turret_Missile(turret, missile, sounds):
         if inPolygon((missile.posX, missile.posY), turret.getPoints()):
             #print("Collision of turret and missile")
+            sounds.play("turretHit")
             turret.getDamage(missile.damage)
             return missile
 
@@ -135,20 +138,21 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
         #for obstacle in obstacles:
         #    compare.add(Obstacle_Missile(obstacle, missile))
         for turret in sectors.getTurrets([(missile.posX, missile.posY)]):
-            missilesToRemove.add(Turret_Missile(turret, missile))
+            missilesToRemove.add(Turret_Missile(turret, missile, sounds))
 
         for obstacle in sectors.getObstacles([(missile.posX, missile.posY)]):
             missilesToRemove.add(Obstacle_Missile(obstacle, missile))
 
     #if len(missilesToRemove) != len(compare) or len(missilesToRemove) != len(missilesToRemove & compare):
     #    print("difference for player missiles")
+
     playerMissiles -= missilesToRemove
 
     missilesToRemove = set()
 
 
     for missile in missiles:
-        missilesToRemove.add(Player_Missile(player, missile))
+        missilesToRemove.add(Player_Missile(player, missile, sounds))
 
         for obstacle in sectors.getObstacles([(missile.posX, missile.posY)]):
             missilesToRemove.add(Obstacle_Missile(obstacle, missile))
@@ -156,4 +160,7 @@ def solveCollisions( player: Player, obstacles: list[Obstacle], turrets: list[Ab
         #for obstacle in obstacles:
         #    compare.add(Obstacle_Missile(obstacle, missile))
 
+    for missile in missilesToRemove:
+        if isinstance(missile, RocketMissile):
+            sounds.play("rocketCollision")
     missiles -= missilesToRemove

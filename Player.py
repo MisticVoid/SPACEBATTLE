@@ -1,5 +1,9 @@
+import os
 from typing import *
 from math import sin,cos,pi
+
+import pygame
+
 from MisselPlacer import MisselPlacer
 from standardMissel import StandardMissile
 from MisselAbstract import AbstractMissile
@@ -76,12 +80,13 @@ class Player:
         self.shootDelay = max(0,self.shootDelay)
         return self.move(deltaTime)
 
-    def shoot(self) -> Union[AbstractMissile,None]:
+    def shoot(self, sounds) -> Union[AbstractMissile,None]:
         if self.shootDelay>0:
             return None
         else:
             self.shootDelay = self.shootDelayTime
             point = self.getPoints()
+            sounds.play("playerShot")
             return self.missilePlacer.placeMissile((self.posX, self.posY), point[2], self.sizeX // 2 + 5, self.angle)
 
     def draw(self) -> Surface:

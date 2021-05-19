@@ -2,6 +2,7 @@ import pygame
 from Player import *
 from MapElement import *
 from KeyState import KeyState
+from Sounds import Sounds
 from StandardTurret import StandardTurret
 from RocketTurret import RocketTurret, RocketMissile
 from Obstacle import Obstacle
@@ -14,6 +15,7 @@ from Sectors import Sectors
 
 class Level:
     def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level, settings):
+        self.sounds = Sounds(0.1)
         self.screenSizeX = sizeX
         self.screenSizeY = sizeY
 
@@ -26,7 +28,7 @@ class Level:
 
         self.player = Player(**playerProperties)
 
-        self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addPlayerMissile(self.player.shoot()))}
+        self.keyControl = {pygame.K_SPACE:KeyState(lambda: self.addPlayerMissile(self.player.shoot(self.sounds)))}
 
         # self.obstacles = [Obstacle(400, 400, 100, 100, (50,50,50), points = ((0, 50), (90, 80), (100, 10), (0,0)))]
         # self.obstacles.append(Obstacle(-100, -100, 1200, 100, visible = False))
@@ -161,7 +163,7 @@ class Level:
         #obstacles = self.filterElements(self.obstacles)
         #self.filterMissiles()
 
-        solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, self.sectors, deltaTime)
+        solveCollisions(self.player, self.obstacles, self.turrets, self.playerMissiles, self.missiles, self.sectors, deltaTime, self.sounds)
         #solveCollisions(self.player, obstacles, turrets, self.playerMissiles, self.missiles, deltaTime)
 
         for missile in self.missiles:
@@ -184,9 +186,10 @@ class Level:
         toRemove = set()
         for turret in turrets:
             turret.nextCycle(deltaTime, self.player.posX, self.player.posY)
-            self.addMissile(turret.shoot(self.player.posX, self.player.posY))
+            self.addMissile(turret.shoot(self.player.posX, self.player.posY, self.sounds))
             if turret.health <= 0:
                 toRemove.add(turret)
+                self.sounds.play("turretDestroyed")
         self.removeDeadTurrets(toRemove)
 
 

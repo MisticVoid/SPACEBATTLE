@@ -4,6 +4,9 @@ from StandardTurretVisual import StandardTurretVisual
 from pygame import Color
 from MisselPlacer import MisselPlacer
 
+from MisselAbstract import AbstractMissile
+from Geometry import twoPointToLine,distPointFromLine,rotatePoint,orient,squarePointDis
+
 class StandardTurret(AbstractTurret):
     def __init__(self, posX: int, posY: int, size: int, damage: int, maxHealth: int, coolDown: float,
                  rotationSpeed: float,angle: float,bulletSpeed: int):
@@ -15,6 +18,9 @@ class StandardTurret(AbstractTurret):
 
     def effect(self,screen,screenX,screenY,x,y):
         pass
+
+    def shotSound(self):
+        return "standardShot"
 
     # def getCrossPoint(self,posX: float,posY: float,speed: float,angle: float) -> tuple[float,float]:  # where to aim
     #     # Vx1 = speed * cos(angle)
