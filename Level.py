@@ -203,17 +203,19 @@ class Level:
 
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
 
+        for turret in self.filterElements(self.turrets):
+            self.blend(self.screen,turret,x,y)
+
         for missile in self.missiles:
             self.blend(self.screen,missile,x,y,True)
 
         for missile in self.playerMissiles:
             self.blend(self.screen,missile,x,y,True)
 
-        for turret in self.filterElements(self.turrets):
-            self.blend(self.screen,turret,x,y)
-
         for obstacle in self.filterElements(self.obstacles):
             self.blend(self.screen,obstacle,x,y)
+
+
 
         for turret in self.turrets:
             turret.effect(self.screen,self.screenSizeX,self.screenSizeY,x,y)
