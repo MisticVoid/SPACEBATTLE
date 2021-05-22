@@ -4,7 +4,7 @@ import pygame
 
 
 class GameEngine:
-    def __init__(self, playerProperties, menu, level, sizeX = 1920, sizeY=1020, settings = None):
+    def __init__(self, playerProperties, menu, level,sound, sizeX = 1920, sizeY=1020, settings = None):
         #pygame.init()
         pygame.display.set_caption("Space Battle")
         loading = MapElement(0, 0, sizeX, sizeY, "loading.jpg")
@@ -13,7 +13,7 @@ class GameEngine:
         pygame.display.flip()
 
         #time.sleep(1)
-        self.sounds=Sounds(0.1)
+        self.sounds=sound
         self.runG = False
         self.menu = menu
         self.score = None

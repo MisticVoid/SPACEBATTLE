@@ -18,9 +18,11 @@ class Menu:
     MAX_LEVEL = 6
 
     def __init__(self,  sizeX=1920, sizeY=1020):
-        self.CURRENT_LMAX = 1
         pygame.init()
         pygame.mixer.init()
+        self.sound=Sounds(0.1)
+        self.sound.playMusic()
+        self.CURRENT_LMAX = 1
         self.level=1
         self.difficulty = 1.3
         self.sizeX = sizeX
@@ -61,7 +63,7 @@ class Menu:
         playerProperties = playerDefaultProperties.copy()
         playerProperties["maxHealth"] *= self.difficulty
         playerProperties["damage"] *= self.difficulty
-        self.engine = GameEngine(playerProperties, self, self.level, settings = self.settingsMenu.getSettings())
+        self.engine = GameEngine(playerProperties, self, self.level,sound=self.sound, settings = self.settingsMenu.getSettings())
         score = self.engine.run()
         if score == None:
             self.runMenu()
@@ -82,10 +84,8 @@ class Menu:
         self.pauseMenu.runMenu()
 
     def win(self):
-        print("win")
         if self.level+1 < Menu.MAX_LEVEL:
             if self.level==self.CURRENT_LMAX:
-                print("incrise")
                 self.CURRENT_LMAX += 1
                 self.lvlSelector.update_items([(str(i), i) for i in range(1, self.CURRENT_LMAX + 1)])
             self.winMenu.runMenu()

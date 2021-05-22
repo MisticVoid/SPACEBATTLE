@@ -16,9 +16,13 @@ class Sounds:
         self.sounds["laser"] = pygame.mixer.Sound(os.path.join("recourses", "laser.wav"))
         self.sounds["turretHit"] = pygame.mixer.Sound(os.path.join("recourses", "turretHit.wav"))
         self.sounds["standardShot"] = pygame.mixer.Sound(os.path.join("recourses", "standardShot.wav"))
+        self.sounds["music"] = pygame.mixer.Sound(os.path.join("recourses", "music.wav"))
 
         for s in self.sounds.values():
             s.set_volume(volume)
 
     def play(self, soundName):
         self.sounds[soundName].play()
+
+    def playMusic(self):
+        self.sounds["music"].play(loops=1)
