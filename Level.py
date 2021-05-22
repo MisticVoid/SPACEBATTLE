@@ -14,8 +14,8 @@ from Sectors import Sectors
 #MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
 class Level:
-    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level, settings):
-        self.sounds = Sounds(0.1)
+    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level, settings,sounds):
+        self.sounds = sounds
         self.screenSizeX = sizeX
         self.screenSizeY = sizeY
 
@@ -203,17 +203,19 @@ class Level:
 
         self.screen.blit(s, (self.screenSizeX//2 - s.get_rect().width//2, self.screenSizeY//2 - s.get_rect().height//2))
 
+        for turret in self.filterElements(self.turrets):
+            self.blend(self.screen,turret,x,y)
+
         for missile in self.missiles:
             self.blend(self.screen,missile,x,y,True)
 
         for missile in self.playerMissiles:
             self.blend(self.screen,missile,x,y,True)
 
-        for turret in self.filterElements(self.turrets):
-            self.blend(self.screen,turret,x,y)
-
         for obstacle in self.filterElements(self.obstacles):
             self.blend(self.screen,obstacle,x,y)
+
+
 
         for turret in self.turrets:
             turret.effect(self.screen,self.screenSizeX,self.screenSizeY,x,y)

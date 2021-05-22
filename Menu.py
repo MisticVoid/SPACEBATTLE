@@ -12,13 +12,18 @@ playerDefaultProperties = {"posX": 100, "posY": 100, "speed": 0, "maxSpeedForwar
                                 "rotationSpeed": 2 * pi, "sizeX": 50, "sizeY": 25, "maxHealth": 200, "damage": 25,
                                 "shotDelayTime": 0.5, "missileSpeed": 1000}
 
-MAX_LEVEL=6
+
 
 class Menu:
+    MAX_LEVEL = 6
+
     def __init__(self,  sizeX=1920, sizeY=1020):
         pygame.init()
         pygame.mixer.init()
-        self.level=0
+        self.sound=Sounds(0.1)
+        self.sound.playMusic()
+        self.CURRENT_LMAX = 1
+        self.level=1
         self.difficulty = 1.3
         self.sizeX = sizeX
         self.sizeY = sizeY
@@ -30,7 +35,6 @@ class Menu:
         self.menu = pygame_menu.Menu(sizeY, sizeX, 'Main menu', theme=mytheme)
 
 
-
         self.pauseMenu = PauseMenu(self, sizeX, sizeY)
         self.settingsMenu = SettingsMenu(self, sizeX, sizeY)
         self.winMenu = WinMenu(self, sizeX, sizeY)
@@ -39,7 +43,7 @@ class Menu:
 
         self.menu.add.button('Play', self.startGame)
         self.menu.add.button('Settings', self.settingsMenu.menu)
-        self.lvlSelector = self.menu.add.selector('Level :', [(str(i), i) for i in range(MAX_LEVEL)], onchange=self.setLevel, selector_id='lvl_selector')
+        self.lvlSelector = self.menu.add.selector('Level :', [(str(i), i) for i in range(1,self.CURRENT_LMAX+1)], onchange=self.setLevel, selector_id='lvl_selector')
         self.menu.add.selector('Difficulty :', [(" Easy ", 1.3), ("Medium", 1), (" Hard ", 0.7)], onchange=self.setDifficulty)
         self.menu.add.button('Quit', pygame_menu.events.EXIT)
 
@@ -53,14 +57,13 @@ class Menu:
 
     def nextLevel(self):
         self.level += 1
-        self.lvlSelector._right()
         self.startGame()
 
     def startGame(self):
         playerProperties = playerDefaultProperties.copy()
         playerProperties["maxHealth"] *= self.difficulty
         playerProperties["damage"] *= self.difficulty
-        self.engine = GameEngine(playerProperties, self, self.level, settings = self.settingsMenu.getSettings())
+        self.engine = GameEngine(playerProperties, self, self.level,sound=self.sound, settings = self.settingsMenu.getSettings())
         score = self.engine.run()
         if score == None:
             self.runMenu()
@@ -70,6 +73,7 @@ class Menu:
             self.lose()
 
     def runMenu(self):
+        self.lvlSelector.set_value(self.CURRENT_LMAX - 1)
         self.menu.enable()
         self.menu.mainloop(self.screen)
 
@@ -80,13 +84,22 @@ class Menu:
         self.pauseMenu.runMenu()
 
     def win(self):
-        if self.level+1 < MAX_LEVEL:
+        if self.level+1 < Menu.MAX_LEVEL:
+            if self.level==self.CURRENT_LMAX:
+                self.CURRENT_LMAX += 1
+                self.lvlSelector.update_items([(str(i), i) for i in range(1, self.CURRENT_LMAX + 1)])
             self.winMenu.runMenu()
+            self.lvlSelector.set_value(self.CURRENT_LMAX - 1)
+            self.setLevel(None,self.CURRENT_LMAX)
         else:
             self.creditsScreen.runMenu()
+            self.lvlSelector.set_value(self.CURRENT_LMAX - 1)
+            self.setLevel(None, self.CURRENT_LMAX)
 
     def lose(self):
         self.loseMenu.runMenu()
+        self.lvlSelector.set_value(self.CURRENT_LMAX - 1)
+        self.setLevel(None, self.CURRENT_LMAX)
 
     def getScreen(self):
         return self.screen
