@@ -14,6 +14,8 @@ class PauseMenu:
 
 
     def runMainMenu(self):
+        self.mainMenu.lvlSelector.set_value(self.mainMenu.CURRENT_LMAX - 1)
+        self.mainMenu.setLevel(None, self.mainMenu.CURRENT_LMAX)
         self.menu.disable()
 
 

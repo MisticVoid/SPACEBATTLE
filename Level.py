@@ -14,8 +14,8 @@ from Sectors import Sectors
 #MOUSE_CONTROL = True  # change to False to back to a/d rotating
 
 class Level:
-    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level, settings):
-        self.sounds = Sounds(0.1)
+    def __init__(self, playerProperties, sizeX: int, sizeY: int, gameEngine, screen, level, settings,sounds):
+        self.sounds = sounds
         self.screenSizeX = sizeX
         self.screenSizeY = sizeY
 
